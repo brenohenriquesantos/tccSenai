@@ -7,6 +7,9 @@ const data = document.querySelector("#data");
 const nome = document.querySelector("#nome");
 const senhaConfirmar = document.querySelector("#senhaConfirmar");
 const copyright = document.querySelector("#copyright");
+const filerInput = document.querySelector('#file-input');
+const imgPrincipal = document.querySelector('#imgPrincipal');
+let imagemData = "";
 //DOM
 
 
@@ -63,15 +66,27 @@ function verificarCampos(event) {
 	}
 }
 
-function amazenarDados() {
+function validarImagem(dadoImagem) {
+	if (dadoImagem === "" || !dadoImagem) {
+		return false;
+	}
+
+	return true;
+}
+
+async function amazenarDados() {
 
 	event.preventDefault();
+	
+	const imagem = await processarImagem();
 
 	localStorage.setItem("cpf", cpf.value);
 	localStorage.setItem("email", email.value);
 	localStorage.setItem("senha", senha.value);
 	localStorage.setItem("data", data.value);
 	localStorage.setItem("nome", nome.value);
+	localStorage.setItem("imagem", imagem.value);
+	
 
 	window.location.href = "/cadastro/";
 
@@ -98,6 +113,50 @@ function verificarCPF(cpfParaVerificar) {
 					});
 			}
 		})
+}
+
+function mostrarImgEscolhida(fileInput) {
+	var file = fileInput.files[0];
+	var reader = new FileReader();
+
+	reader.onload = function(e) {
+		imgPrincipal.src = e.target.result;
+	}
+
+	reader.readAsDataURL(file);
+}
+
+function toBase64(imagem) {
+	return new Promise((resolve, reject) => {
+		const arquivo = imagem.files[0];
+
+		if (!arquivo) {
+			reject(new Error("Nenhum arquivo fornecido."));
+			return;
+		}
+
+		const reader = new FileReader();
+
+		reader.onloadend = function() {
+			const imagem64 = reader.result.replace("data:", "").replace(/^.+,/, "");
+			resolve(imagem64);
+		}
+
+		reader.onerror = function() {
+			reject(new Error("Erro na leitura do arquivo."));
+		}
+
+		reader.readAsDataURL(arquivo);
+	})
+}
+
+async function processarImagem() {
+	try {
+		const imagem64 = await toBase64(filerInput);
+		return imagem64;
+	} catch (error) {
+		return null;
+	}
 }
 
 
@@ -152,8 +211,13 @@ senhaConfirmar.addEventListener("blur", function() {
 btnProsseguir.addEventListener("click", function(event) {
 	var retorno = verificarCampos(event);
 	if (retorno) {
-		amazenarDados();
+		
+		if(validarImagem(imgPrincipal)){
+			amazenarDados();
 		localStorage.clear();
+		}else{
+			alert("Escolha uma foto !");
+		}
 	}
 });
 
@@ -161,3 +225,7 @@ cpf.addEventListener("blur", function() {
 	verificarCPF(cpf.value);
 });
 
+
+filerInput.addEventListener('change', function() {
+	mostrarImgEscolhida(this);
+})

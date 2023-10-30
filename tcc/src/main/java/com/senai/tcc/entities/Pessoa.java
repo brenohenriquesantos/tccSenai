@@ -10,13 +10,18 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @MappedSuperclass
-@Getter @Setter
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Pessoa {
-	
+
 	@NotBlank
 	private String nome;
 	@Column(unique = true, nullable = false)
@@ -26,19 +31,5 @@ public class Pessoa {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "enderecoID")
 	private Endereco endereco;
-	
-	
-	public Pessoa(String nome, String cpf, LocalDate data_nasc, Endereco endereco) {
-		this.nome = nome;
-		this.cpf = cpf;
-		this.data = data_nasc;
-		this.endereco = endereco;
-	}
-	
-	public Pessoa() {
-		
-	}
-	
 
-	
 }

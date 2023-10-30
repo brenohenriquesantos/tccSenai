@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import com.senai.tcc.exceptions.InvalidCnpjException;
 import com.senai.tcc.exceptions.InvalidCpfException;
 import com.senai.tcc.exceptions.InvalidEmailException;
+import com.senai.tcc.exceptions.InvalidFotoException;
 import com.senai.tcc.exceptions.InvalidMapException;
 
 import io.micrometer.common.util.StringUtils;
@@ -81,6 +82,12 @@ public class Utilitarios {
 	public static void validarSenha(String senha) throws InvalidAlgorithmParameterException {
 		if (senha.isBlank()) {
 			throw new InvalidAlgorithmParameterException("A senha não pode ser vazia !");
+		}
+	}
+	
+	public static void validarImgBase64(String img64) throws InvalidFotoException {
+		if(StringUtils.isBlank(img64)) {
+			throw new InvalidFotoException("A foto não pode ser vazia !");
 		}
 	}
 

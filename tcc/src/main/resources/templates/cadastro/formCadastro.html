@@ -16,17 +16,24 @@
 	<div class="main-w3layouts wrapper">
 		<div class="main-agileinfo">
 			<div class="agileits-top">
+				<div class="image-upload" id="divImg">
+					<label for="file-input">
+						<img id="imgPrincipal" src="" alt="Foto do Estabelecimento" />
+					</label>
+
+					<input id="file-input" style="display: none;" type="file" accept="image/*" />
+				</div>
 				<form method="post">
 					<input class="text" type="text" name="cpf" placeholder="Digite seu CPF" required="" id="cpf">
 					<input class="text email" type="text" name="nome" placeholder="Digite seu nome" required=""
 						id="nome">
 					<input class="text email" type="email" name="email" placeholder="Digite seu email" required=""
 						id="email">
-					<input class="text email" type="date" name="data" required="" id="data" >
-					<input class="text" type="password" title="No minimo 8 caracteres" name="password" placeholder="Digite sua senha" required=""
-						id="senha">
-					<input class="text w3lpass" type="password" title="No minimo 8 caracteres" name="password" placeholder="Confirme sua senha"
-						required="" id="senhaConfirmar">
+					<input class="text email" type="date" name="data" required="" id="data">
+					<input class="text" type="password" title="No minimo 8 caracteres" name="password"
+						placeholder="Digite sua senha" required="" id="senha">
+					<input class="text w3lpass" type="password" title="No minimo 8 caracteres" name="password"
+						placeholder="Confirme sua senha" required="" id="senhaConfirmar">
 					<input type="submit" value="Prosseguir" id="btnProsseguir">
 				</form>
 				<p>Já possui uma conta? <a href="/login"> Clique aqui para fazer login!</a></p>
@@ -39,7 +46,7 @@
 		</div>
 
 	</div>
-	
+
 	<!-- mascara cpf -->
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>

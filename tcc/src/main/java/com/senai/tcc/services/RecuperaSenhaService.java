@@ -12,6 +12,8 @@ import com.senai.tcc.entities.Usuario;
 import com.senai.tcc.exceptions.InvalidCodigoException;
 import com.senai.tcc.exceptions.InvalidCpfException;
 import com.senai.tcc.exceptions.InvalidEmailException;
+import com.senai.tcc.exceptions.InvalidFotoException;
+import com.senai.tcc.exceptions.ProcessamentoException;
 
 import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
@@ -44,25 +46,25 @@ public class RecuperaSenhaService {
 		emailService.enviar(gerarMensagem(cpf, email, codigoRecuperacao));
 
 	}
-	
+
 	@Transactional
-	public void alterarSenhaCodigoEmail(String codigo, String senha)
-			throws InvalidCodigoException, NotFoundException, InvalidAlgorithmParameterException, InvalidCpfException {
+	public void alterarSenhaCodigoEmail(String codigo, String senha) throws InvalidCodigoException, NotFoundException,
+			InvalidAlgorithmParameterException, InvalidCpfException, ProcessamentoException, InvalidFotoException {
 
 		Utilitarios.validarSenha(senha);
 
 		UsrEmailCodigos registroCodigo = usrEmailCodigoService.buscarRegistroCodigo(codigo);
-		
-		if(registroCodigo.isStatus()) {
+
+		if (registroCodigo.isStatus()) {
 			Usuario usr = registroCodigo.getUsuario();
 
 			usr.setSenha(senha);
 
 			usrService.salvarUsuario(usr);
-			
+
 			usrEmailCodigoService.atualizarStatusCodigo(usr);
 
-		}else {
+		} else {
 			throw new InvalidCodigoException("Codigo de recuperação já utilizado !");
 		}
 
@@ -73,7 +75,8 @@ public class RecuperaSenhaService {
 
 		String assunto = "Recuperação Senha";
 
-		String conteudo = EmailHtmlModelo.getRedefinirSenhaTemplate(usrService.buscarNomePeloCpf(cpf), codigoRecuperacao);
+		String conteudo = EmailHtmlModelo.getRedefinirSenhaTemplate(usrService.buscarNomePeloCpf(cpf),
+				codigoRecuperacao);
 
 		EmailMensagem mensagem = new EmailMensagem(email, assunto, conteudo);
 

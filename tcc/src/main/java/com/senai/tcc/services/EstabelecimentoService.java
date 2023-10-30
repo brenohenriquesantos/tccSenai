@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.senai.tcc.components.Base64ToByte;
 import com.senai.tcc.components.ByteToBase64;
 import com.senai.tcc.entities.Estabelecimento;

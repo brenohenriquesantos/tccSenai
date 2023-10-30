@@ -1,5 +1,7 @@
 package com.senai.tcc.controllers;
 
+import java.security.InvalidAlgorithmParameterException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.senai.tcc.entities.Usuario;
 import com.senai.tcc.exceptions.InvalidCpfException;
+import com.senai.tcc.exceptions.InvalidFotoException;
+import com.senai.tcc.exceptions.ProcessamentoException;
 import com.senai.tcc.services.UsuarioService;
 import com.senai.tcc.services.Utilitarios;
 
@@ -18,48 +22,49 @@ import jakarta.validation.Valid;
 
 @Controller
 public class CadastroController {
-	
+
 	@Autowired
 	UsuarioService usuarioService;
-	
+
 	@GetMapping("/cadastro")
 	public String redirecionarForm1() {
 		return "cadastro/formCadastro";
 	}
-	
+
 	@GetMapping("/cadastro/")
-	public String redirecionarForm2(){
+	public String redirecionarForm2() {
 		return "cadastro/formCadastro2";
 	}
-	
-	
+
 	@PostMapping("/cadastrarUsuario")
-	public ResponseEntity<String> cadastrarUsuario(@RequestBody @Valid Usuario usr){
+	public ResponseEntity<String> cadastrarUsuario(@RequestBody Usuario usr) {
 		try {
-			Usuario novoUsuario = usuarioService.salvarUsuario(usr);
-			
-			if(novoUsuario != null) {
-				return ResponseEntity.ok("Cadastrado Com Sucesso !");
-			}else {
-				return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao salvar !");
-			}
-			
+
+			usuarioService.salvarUsuario(usr);
+			return ResponseEntity.ok("Cadastrado Com Sucesso !");
+
+		} catch (InvalidAlgorithmParameterException e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		} catch (InvalidCpfException e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		} catch (ProcessamentoException e) {
+			// TODO Auto-generated catch block
+			return ResponseEntity.badRequest().body(e.getMessage());
+		} catch (InvalidFotoException e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
 		} catch (DataIntegrityViolationException dive) {
 			// banco de dados.
-			return ResponseEntity.status(HttpStatus.CONFLICT).body("Ocorreu um erro no servidor.");
-		} catch (Exception e) {
-			// Captura todas as outras exceções não esperadas.
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro interno no servidor.");
+			return ResponseEntity.badRequest().body("Ocorreu um erro interno.");
 		}
 	}
-	
+
 	@PostMapping("/verificarCPF")
 	public ResponseEntity<String> verificarCPF(@RequestBody String cpf) {
 
 		try {
-			
+
 			Utilitarios.validarCPF(cpf);
-			
+
 			boolean retorno;
 			retorno = usuarioService.verificarCPF(cpf);
 
@@ -73,5 +78,5 @@ public class CadastroController {
 		}
 
 	}
-	
+
 }
