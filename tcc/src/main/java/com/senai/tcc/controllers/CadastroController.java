@@ -18,8 +18,6 @@ import com.senai.tcc.exceptions.ProcessamentoException;
 import com.senai.tcc.services.UsuarioService;
 import com.senai.tcc.services.Utilitarios;
 
-import jakarta.validation.Valid;
-
 @Controller
 public class CadastroController {
 

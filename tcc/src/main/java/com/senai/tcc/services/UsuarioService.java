@@ -59,18 +59,16 @@ public class UsuarioService {
 	public void salvarUsuario(Usuario usr) throws InvalidCpfException, InvalidAlgorithmParameterException,
 			ProcessamentoException, InvalidFotoException {
 
-		Utilitarios.validarCPF(usr.getCpf());
+		validarCampos(usr);
 
-		Utilitarios.validarSenha(usr.getSenha());
+		limparCEP(usr);
 
-		Utilitarios.validarImgBase64(usr.getFotoBase64());
+		limparCPF(usr);
 
-		usr.setCpf(LimparCPF.limpar(usr.getCpf()));
+		criptografarSenha(usr);
 
-		usr.setSenha(CriptografaSenha.encriptarSenha(usr.getSenha()));
+		conveterImgBase64ParaByte(usr);
 
-		usr.setUsrImg(Base64ToByte.transformar(usr.getFotoBase64()));
-		
 		usuarioRepostiory.save(usr);
 
 	}
@@ -153,6 +151,44 @@ public class UsuarioService {
 	private Usuario conveterImgToBase64(Usuario usr) {
 		usr.setFotoBase64(ByteToBase64.transformar(usr.getUsrImg()));
 		return usr;
+	}
+
+	private void limparCEP(Usuario usr) {
+		String cep = usr.getEndereco().getCep();
+
+		cep = LimparCEP.limpar(cep);
+
+		usr.getEndereco().setCep(cep);
+
+	}
+
+	private void validarCampos(Usuario usr)
+			throws InvalidCpfException, InvalidAlgorithmParameterException, InvalidFotoException {
+
+		Utilitarios.validarCPF(usr.getCpf());
+
+		Utilitarios.validarSenha(usr.getSenha());
+
+		Utilitarios.validarImgBase64(usr.getFotoBase64());
+	}
+
+	private void limparCPF(Usuario usr) {
+		String cpfLimpo = LimparCPF.limpar(usr.getCpf());
+
+		usr.setCpf(cpfLimpo);
+	}
+
+	private void criptografarSenha(Usuario usr) throws InvalidAlgorithmParameterException {
+		String senhaCript = CriptografaSenha.encriptarSenha(usr.getSenha());
+
+		usr.setSenha(senhaCript);
+
+	}
+
+	private void conveterImgBase64ParaByte(Usuario usr) throws ProcessamentoException {
+		byte[] imgByte = Base64ToByte.transformar(usr.getFotoBase64());
+
+		usr.setUsrImg(imgByte);
 	}
 
 }

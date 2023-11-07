@@ -118,7 +118,7 @@ function criarCorpoComentario(nome, comentario) {
 	return divBody;
 }
 
-function criarComentario(nome, comentario) {
+function criarComentario(nome, comentario,usrImg) {
 
 	let div = document.createElement('div');
 	div.classList.add('media');
@@ -127,7 +127,7 @@ function criarComentario(nome, comentario) {
 	a.classList.add('pull-left');
 
 	let img = document.createElement('img');
-	img.src = 'https://bootdey.com/img/Content/avatar/avatar4.png';
+	img.src = usrImg;
 
 	a.appendChild(img);
 
@@ -148,10 +148,15 @@ async function listarComentarios() {
 
 		const listaComentarios = await obterComentarios(idForm);
 
-		numeroComentarios.textContent = listaComentarios.length + " Comentarios";
+		numeroComentarios.textContent = listaComentarios.length + " Comentario(s)";
 		
 		listaComentarios.forEach(comentario =>{
-			let divComentario = criarComentario(comentario.usr.nome, comentario.texto);
+			
+			var nome = comentario.usr.nome;
+			var texto = comentario.texto;
+			var imagem = "data:image/jpg;base64," + comentario.usr.fotoBase64;
+			
+			let divComentario = criarComentario(nome,texto,imagem);
 			comentariosBanco.appendChild(divComentario);
 		})
 
@@ -208,6 +213,9 @@ btnEnviar.addEventListener('click', async (event) => {
 
 		if (resposta.ok) {
 			location.reload();
+		}else{
+			const txtErro = await resposta.text();
+			alert(txtErro);
 		}
 	} catch (error) {
 		const msgErro = await error.text();

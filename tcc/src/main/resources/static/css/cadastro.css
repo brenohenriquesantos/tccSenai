@@ -650,5 +650,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   #divImg img{
     cursor: pointer;
   }
+  
+  #imgPrincipal{
+	  max-width: 200px;
+      max-height: 140px;
+  }
 
   

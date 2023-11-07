@@ -17,7 +17,7 @@ import com.senai.tcc.services.EstabComentariosService;
 import com.senai.tcc.services.EstabelecimentoService;
 import com.senai.tcc.services.UsuarioService;
 
-import models.ComentarioDTO;
+import dtos.ComentarioDTO;
 
 @Controller
 public class EstabComentariosController {

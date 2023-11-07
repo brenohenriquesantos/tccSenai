@@ -9,10 +9,11 @@ const email = localStorage.getItem("email");
 const senha = localStorage.getItem("senha");
 const data = localStorage.getItem("data");
 const nome = localStorage.getItem("nome");
-const bairro = document.querySelector("#bairro").value;
-const logradouro = document.querySelector("#logradouro").value;
-const localidade = document.querySelector("#localidade").value;
-const cepValor = document.querySelector("#cep").value;
+const imagem = localStorage.getItem("imagem");
+const bairro = document.querySelector("#bairro");
+const logradouro = document.querySelector("#logradouro");
+const localidade = document.querySelector("#localidade");
+const cepValor = document.querySelector("#cep");
 
 
 //funcoes
@@ -43,9 +44,9 @@ async function buscarEndereco() {
 		
 		if(resposta.ok){
 			const data = await resposta.json();
-			document.querySelector("#bairro").value = data.bairro;
-			document.querySelector("#logradouro").value = data.logradouro;
-			document.querySelector("#localidade").value = data.localidade;
+			bairro.value = data.bairro;
+			logradouro.value = data.logradouro;
+			localidade.value = data.localidade;
 		}else{
 			const erroMsg =  await resposta.text();
 			alert(erroMsg);
@@ -56,7 +57,7 @@ async function buscarEndereco() {
 	
 }
 
-function enviarDadosBack() {
+ async function enviarDadosBack() {
 
 	const dadosJuntos = {
 		cpf,
@@ -65,39 +66,34 @@ function enviarDadosBack() {
 		data,
 		nome,
 		endereco: {
-			bairro,
-			logradouro,
-			localidade,
-			cep: cepValor
-		}
+			bairro: bairro.value,
+			logradouro: logradouro.value,
+			localidade: localidade.value,
+			cep: cepValor.value
+		},
+		fotoBase64: imagem
 	};
 
-	fetch("/cadastrarUsuario", {
+	const resposta = await fetch("/cadastrarUsuario", {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json"
 		},
 		body: JSON.stringify(dadosJuntos)
 	})
-		.then(response => {
-
-			if (!response.ok) {
-				return response.text().then(text => Promisse.reject(text));
-			}
-
-			return response.text();
-		})
-		.then(data => {
-			alert(data);
-			window.location.href = "/";
-		}).catch(error => {
-			alert(error);
-			window.location.href = "/";
-		});
+	
+	if(!resposta.ok){
+		const erroTexto = await resposta.text();
+		alert(erroTexto);
+	}
+	
+	const msgSucesso = await resposta.text();
+	alert(msgSucesso);
+	window.location.href = "/";
+	
 }
 
 function verificarCampos() {
-	preventDefault();
 
 	var valido = true;
 
@@ -107,15 +103,15 @@ function verificarCampos() {
 		senha,
 		data,
 		nome,
-		endereco,
+        imagem,
 		bairro,
 		logradouro,
 		localidade,
 		cepValor
 	};
 
-	campos.forEach(function(campo) {
-		if (!campo.trim()) {
+	Object.values(campos).forEach(function(campo) {
+		if (typeof campo === "string" &&  !campo.trim()) {
 			valido = false;
 		}
 	})
@@ -130,7 +126,11 @@ function verificarCampos() {
 
 //eventos
 cep.addEventListener("blur", buscarEndereco);
+
 btnEnviar.addEventListener("click", () => {
+	
+	event.preventDefault();
+	
 	var retorno = verificarCampos();
 
 	if (retorno) {

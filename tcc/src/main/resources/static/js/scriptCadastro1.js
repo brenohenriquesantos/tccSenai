@@ -85,7 +85,7 @@ async function amazenarDados() {
 	localStorage.setItem("senha", senha.value);
 	localStorage.setItem("data", data.value);
 	localStorage.setItem("nome", nome.value);
-	localStorage.setItem("imagem", imagem.value);
+	localStorage.setItem("imagem", imagem);
 	
 
 	window.location.href = "/cadastro/";
@@ -209,10 +209,11 @@ senhaConfirmar.addEventListener("blur", function() {
 });
 
 btnProsseguir.addEventListener("click", function(event) {
+	event.preventDefault();
 	var retorno = verificarCampos(event);
 	if (retorno) {
 		
-		if(validarImagem(imgPrincipal)){
+		if(validarImagem(imgPrincipal.getAttribute('src'))){
 			amazenarDados();
 		localStorage.clear();
 		}else{
