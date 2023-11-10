@@ -168,6 +168,37 @@ async function listarComentarios() {
 
 }
 
+async function carregarImgUsr(){
+	
+	if(verificarUsrLogado()){
+		
+		const id = obterValorCookie('usuarioID');
+		
+		const resposta = await fetch('/usuario/consultar?id=' + id);
+		
+		if(resposta.ok){
+			
+			const dados = await resposta.json();
+			
+			const imgUsr = document.querySelector('#imgUsr');
+			
+			imgUsr.src = "data:image/jpeg;base64," + dados.fotoBase64;
+		}
+	}
+	
+	
+}
+
+function verificarUsrLogado(){
+	const idUsr = obterValorCookie('usuarioID');
+	
+	if(idUsr != null){
+		return true;
+	}
+	
+	return false;
+}
+
 
 document.addEventListener('DOMContentLoaded', async () => {
 	const id = obterIdUrl();
@@ -181,6 +212,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 	alterarBackgroundServices(dados);
 
 	listarComentarios();
+	
+	carregarImgUsr();
 })
 
 

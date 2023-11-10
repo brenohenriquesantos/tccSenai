@@ -40,5 +40,8 @@ public class Usuario extends Pessoa {
 	private byte[] usrImg;
 	@Transient
 	private String fotoBase64;
+	@Column(nullable = false, columnDefinition = "varchar(3) default 'N'")
+	private String adm;
+
 
 }

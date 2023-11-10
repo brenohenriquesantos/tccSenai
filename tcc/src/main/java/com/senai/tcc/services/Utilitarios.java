@@ -80,7 +80,7 @@ public class Utilitarios {
 	}
 
 	public static void validarSenha(String senha) throws InvalidAlgorithmParameterException {
-		if (senha.isBlank()) {
+		if (StringUtils.isBlank(senha)) {
 			throw new InvalidAlgorithmParameterException("A senha não pode ser vazia !");
 		}
 	}

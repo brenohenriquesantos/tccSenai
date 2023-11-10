@@ -7,7 +7,7 @@ const erroMsg = document.querySelector("#erroMsg");
 
 //eventos
 
-btnLogin.addEventListener('click', () => {
+btnLogin.addEventListener('click', async () => {
 
 	event.preventDefault();
 
@@ -21,24 +21,26 @@ btnLogin.addEventListener('click', () => {
 
 
 
-	fetch('/login', {
+	const response = await fetch('/login', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify(credenciais)
-	})
-		.then(response => {
-			if (!response.ok) {
-				erroMsg.style.display = 'block';
-			} else {
-				erroMsg.style.display = 'none';
+	});
 
-				window.location.href = "/";
 
-			}
-		})
-		.catch(error => {
-			alert("Servidor Indisponivel", error.message);
-		})
+	if (!response.ok) {
+		const txtErro = await response.text();
+
+		erroMsg.textContent = txtErro;
+
+		erroMsg.style.display = 'block';
+	}
+
+	const dados = await response.json();
+
+	sessionStorage.setItem("isAdm", dados.usrAdm);
+
+	window.location.href = '/';
 })

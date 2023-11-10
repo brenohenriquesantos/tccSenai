@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.senai.tcc.components.Base64ToByte;
 import com.senai.tcc.components.ByteToBase64;
+import com.senai.tcc.components.UsuarioAutenticator;
 import com.senai.tcc.entities.Usuario;
 import com.senai.tcc.exceptions.InvalidCpfException;
 import com.senai.tcc.exceptions.InvalidEmailException;
@@ -92,25 +94,32 @@ public class UsuarioService {
 		return false;
 	}
 
-	public boolean login(String cpf, String senha) throws Exception {
-		try {
+	public UsuarioAutenticator login(String cpf, String senha)
+			throws NotFoundException, InvalidAlgorithmParameterException {
 
-			cpf = LimparCPF.limpar(cpf);
-			Optional<Usuario> usrOptional = usuarioRepostiory.findByCpf(cpf);
+		cpf = LimparCPF.limpar(cpf);
 
-			if (usrOptional.isEmpty()) {
-				return false;
-			}
+		Usuario usr = usuarioRepostiory.findByCpf(cpf)
+				.orElseThrow(() -> new NotFoundException("Usuário não encontrado para o CPF fornecido !"));
 
-			if (enconder.matches(senha, usrOptional.get().getSenha())) {
-				return true;
-			}
+		Utilitarios.validarSenha(senha);
 
-			return false;
-		} catch (Exception erro) {
-			throw new Exception("CPF ou Senha incorretos !");
+		if (!enconder.matches(senha, usr.getSenha())) {
+			throw new BadCredentialsException("Senha incorreta !");
 		}
 
+		return isAdm(usr);
+
+	}
+
+	private UsuarioAutenticator isAdm(Usuario usr) {
+
+		return new UsuarioAutenticator(true, verificarAdm(usr));
+
+	}
+
+	public boolean verificarAdm(Usuario usr) {
+		return usr.getAdm().equals("S");
 	}
 
 	public Long buscarIdPeloCpf(String cpf) {

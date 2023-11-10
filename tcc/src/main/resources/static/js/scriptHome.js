@@ -74,9 +74,22 @@ async function popularEstabelecimentos() {
 	})
 }
 
+function verificarAdm() {
+	const isAdm = sessionStorage.getItem('isAdm');
+
+	if (isAdm === 'true') {
+		alert("Usuario Adm");
+	} else {
+		alert("Usuario normal");
+	}
+
+}
+
 
 
 
 document.addEventListener('DOMContentLoaded', () => {
 	popularEstabelecimentos();
+
+	verificarAdm();
 })
