@@ -1,5 +1,7 @@
 package com.senai.tcc.entities;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,4 +32,6 @@ public class EstabComentarios {
 	private Estabelecimento estabelecimento;
 	@Column(nullable = false, length = 255)
 	private String texto;
+	@Column(nullable = false)
+	private LocalDate data = LocalDate.now();
 }

@@ -31,24 +31,27 @@
 		</div>
 	</nav>
 
-
-	<div id="sobre">
-		<div>
-			<img src="/images/bar.jpg" alt="imagemLocal" id="imgEstabelecimento">
-		</div>
-
-		<div id="textoSobre">
-			<h2 id="titulo">Bar De Alguem</h2>
-			<p id="descricao">Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus reiciendis ratione fuga
-				possimus
-				nesciunt, excepturi tenetur adipisci quae magni deleniti, expedita dolore minima? Voluptates quaerat
-				quos, cumque hic repellat error? Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae
-				totam dolore nihil tempore voluptatibus, est, voluptatum adipisci expedita neque mollitia impedit. Ex
-				quidem rerum odio ab repudiandae maiores ratione voluptatibus? Lorem ipsum dolor sit, amet consectetur
-				adipisicing elit. Nostrum delectus quod natus fugit optio obcaecati, cumque voluptates a ipsum adipisci?
-				Modi laborum quasi facere excepturi voluptate veritatis eum corporis esse?</p>
+	<div class="container px-4" id="estabelecimentoContainer">
+		<div class="row gx-4 justify-content-center">
+			<!-- Imagem do lado esquerdo -->
+			<div class="col-lg-4">
+				<img src="" id="imgEstabelecimento" alt="Imagem" class="img-fluid">
+			</div>
+			<!-- Texto descritivo do lado direito -->
+			<div class="col-lg-6" id="sobre">
+				<h2 id="titulo">Bar do juca</h2>
+				<p id="descricao">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut optio velit inventore,
+					expedita quo
+					laboriosam possimus ea consequatur vitae, doloribus consequuntur ex. Nemo assumenda laborum vel,
+					labore ut velit dignissimos Lorem ipsum, dolor sit amet consectetur adipisicing elit. Excepturi
+					cum ipsum doloribus a consequuntur veritatis totam illo, repellat placeat quaerat est cumque
+					reprehenderit non laboriosam veniam qui sapiente quisquam sequi.</p>
+			</div>
 		</div>
 	</div>
+
+
+
 
 
 	<div id="acessibilidade">
@@ -99,29 +102,25 @@
 
 	<!--Comentarios -->
 	<section class="content-item" id="comments">
-		<div class="container">
-			<div class="row" id="comentarios">
-				<div class="col-sm-8" id="comentariosBanco" >
-					<form>
-						<fieldset>
-							<div class="row">
-								<div class="col-sm-3 col-lg-2 hidden-xs">
-									<img class="img-responsive" id="imgUsr" src="https://bootdey.com/img/Content/avatar/avatar1.png"
-										alt="">
-								</div>
-								<div class="form-group col-xs-12 col-sm-9 col-lg-10">
-									<textarea class="form-control" id="message" placeholder="Deixe sua opinião sobre o local"
-										required=""></textarea>
-								</div>
-							</div>
-						</fieldset>
-						<button class="btn btn-normal pull-right" id="btnEnviar">Enviar</button>
-					</form>
 
-					<h3 id="numeroComentarios"></h3>
-				</div>
+		<div id="comentariosBanco">
+
+			<div class="imgPerfil">
+				<img class="img-responsive" id="imgUsr" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">
+			</div>
+			<div id="caixaComentario">
+				<textarea class="form-control" id="message" placeholder="Deixe sua opinião sobre o local"
+					required=""></textarea>
+				<button class="btn btn-normal pull-right" id="btnEnviar">Enviar</button>
 			</div>
 		</div>
+		<h3 id="numeroComentarios"> 5 Comentarios</h3>
+		
+		<div id="comentarios">
+			
+		</div>
+
+
 	</section>
 
 	<!-- Footer-->
@@ -133,6 +132,9 @@
 	<script src="/js/scriptEstabelecimento.js"></script>
 	<!-- Bootstrap core JS-->
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+	<!-- Formatar Horas/Data -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
 </body>
 
 </html>

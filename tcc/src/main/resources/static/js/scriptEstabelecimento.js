@@ -9,7 +9,7 @@ const banheiro = document.querySelector('#banheiro');
 const btnEnviar = document.querySelector('#btnEnviar');
 const message = document.querySelector('#message');
 const numeroComentarios = document.querySelector('#numeroComentarios');
-const comentariosBanco = document.querySelector('#comentariosBanco');
+const comentarios = document.querySelector('#comentarios');
 
 
 
@@ -81,17 +81,17 @@ async function obterComentarios(idForm) {
 	return listaComentarios;
 }
 
-function criarCorpoComentario(nome, comentario) {
+function criarCorpoComentario(comentario) {
 
 	let divBody = document.createElement('div');
 	divBody.classList.add('media-body');
 
 	let h4 = document.createElement('h4');
 	h4.classList.add('media-heading');
-	h4.textContent = nome;
+	h4.textContent = comentario.usr.nome;
 
 	let p = document.createElement('p');
-	p.textContent = comentario;
+	p.textContent = comentario.texto;
 
 	divBody.appendChild(h4);
 	divBody.appendChild(p);
@@ -109,7 +109,7 @@ function criarCorpoComentario(nome, comentario) {
 
 
 	li.appendChild(i);
-	li.textContent = '27/02/2014';
+	li.textContent = formatarData(comentario.data);
 
 	ul.appendChild(li);
 
@@ -118,7 +118,7 @@ function criarCorpoComentario(nome, comentario) {
 	return divBody;
 }
 
-function criarComentario(nome, comentario,usrImg) {
+function criarComentario(comentario) {
 
 	let div = document.createElement('div');
 	div.classList.add('media');
@@ -127,18 +127,17 @@ function criarComentario(nome, comentario,usrImg) {
 	a.classList.add('pull-left');
 
 	let img = document.createElement('img');
-	img.src = usrImg;
+	img.src = "data:image/jpg;base64," + comentario.usr.fotoBase64;
 
 	a.appendChild(img);
 
 	div.appendChild(a);
 
-	let divBody = criarCorpoComentario(nome, comentario);
+	let divBody = criarCorpoComentario(comentario);
 
 	div.appendChild(divBody);
 	
 	return div;
-
 
 }
 
@@ -152,12 +151,8 @@ async function listarComentarios() {
 		
 		listaComentarios.forEach(comentario =>{
 			
-			var nome = comentario.usr.nome;
-			var texto = comentario.texto;
-			var imagem = "data:image/jpg;base64," + comentario.usr.fotoBase64;
-			
-			let divComentario = criarComentario(nome,texto,imagem);
-			comentariosBanco.appendChild(divComentario);
+			let divComentario = criarComentario(comentario);
+			comentarios.appendChild(divComentario);
 		})
 
 	} catch (Erro) {
@@ -197,6 +192,11 @@ function verificarUsrLogado(){
 	}
 	
 	return false;
+}
+
+function formatarData(data) {
+  const dataFormatada = moment(data);
+   return dataFormatada.format('DD/MM/YYYY');
 }
 
 

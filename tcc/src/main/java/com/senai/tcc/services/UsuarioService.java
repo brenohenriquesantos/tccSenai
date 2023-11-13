@@ -63,7 +63,7 @@ public class UsuarioService {
 
 		validarCampos(usr);
 
-		limparCEP(usr);
+		limparCepUsr(usr);
 
 		limparCPF(usr);
 
@@ -162,7 +162,7 @@ public class UsuarioService {
 		return usr;
 	}
 
-	private void limparCEP(Usuario usr) {
+	private void limparCepUsr(Usuario usr) {
 		String cep = usr.getEndereco().getCep();
 
 		cep = LimparCEP.limpar(cep);

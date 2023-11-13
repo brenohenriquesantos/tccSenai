@@ -5,10 +5,10 @@ import io.micrometer.common.util.StringUtils;
 public class LimparCEP {
 	public static String limpar(String cep) {
 		if (StringUtils.isBlank(cep)) {
-			return null;
+			throw new IllegalArgumentException("Cep vazio !");
 		}
 		
-		cep = cep.replace("/\\D/g", "");
+		cep = cep.replaceAll("\\D", "");
 		return cep;
 	}
 }

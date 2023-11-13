@@ -1,6 +1,6 @@
 package com.senai.tcc.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -11,7 +11,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,21 +33,20 @@ public class Estabelecimento {
 	private String cnpj;
 	@Transient
 	private String fotoBase64;
-	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "fotoID")
-	private EstabelecimentoFoto imagem;
+	@JsonIgnore
+	@Lob
+	private byte[] imgEstabelecimento;
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "enderecoID")
 	private Endereco endereco;
 	@Column(nullable = false)
 	@Lob
 	private String descricao;
-	@Column(nullable = false)
+	@Column(nullable = false, length = 3)
 	private String rampa_acessivel;
-	@Column(nullable = false)
+	@Column(nullable = false, length = 3)
 	private String estacionamento_acessivel;
-	@Column(nullable = false)
+	@Column(nullable = false, length = 3)
 	private String banheiro_acessivel;
 	
 

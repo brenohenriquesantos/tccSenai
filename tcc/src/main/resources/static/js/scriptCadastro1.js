@@ -77,7 +77,7 @@ function validarImagem(dadoImagem) {
 async function amazenarDados() {
 
 	event.preventDefault();
-	
+
 	const imagem = await processarImagem();
 
 	localStorage.setItem("cpf", cpf.value);
@@ -86,7 +86,7 @@ async function amazenarDados() {
 	localStorage.setItem("data", data.value);
 	localStorage.setItem("nome", nome.value);
 	localStorage.setItem("imagem", imagem);
-	
+
 
 	window.location.href = "/cadastro/";
 
@@ -126,7 +126,7 @@ function mostrarImgEscolhida(fileInput) {
 	reader.readAsDataURL(file);
 }
 
-function toBase64(imagem) {
+function imgToBase64(imagem) {
 	return new Promise((resolve, reject) => {
 		const arquivo = imagem.files[0];
 
@@ -138,8 +138,35 @@ function toBase64(imagem) {
 		const reader = new FileReader();
 
 		reader.onloadend = function() {
-			const imagem64 = reader.result.replace("data:", "").replace(/^.+,/, "");
-			resolve(imagem64);
+			const img = new Image();
+			img.src = reader.result;
+
+			img.onload = function() {
+				const canvas = document.createElement('canvas');
+				const canvasContexto = canvas.getContext('2d');
+
+				const larguraImg = 1366;
+				const alturaImg = 768;
+
+				canvas.width = larguraImg;
+				canvas.height = alturaImg;
+
+				canvasContexto.drawImage(img, 0, 0, larguraImg, alturaImg);
+
+				try {
+					const imagem64 = canvas.toDataURL('image/jpeg', 0.8);
+					resolve(imagem64);
+				} catch (error) {
+					reject(new Error("Erro ao processar imagem"));
+				}
+
+
+			}
+
+			img.onerror = function() {
+				reject(new Error("Erro ao carregar a imagem"));
+			}
+
 		}
 
 		reader.onerror = function() {
@@ -152,9 +179,10 @@ function toBase64(imagem) {
 
 async function processarImagem() {
 	try {
-		const imagem64 = await toBase64(filerInput);
+		const imagem64 = await imgToBase64(filerInput);
 		return imagem64;
 	} catch (error) {
+		console.error(error.mesage);
 		return null;
 	}
 }
@@ -212,11 +240,11 @@ btnProsseguir.addEventListener("click", function(event) {
 	event.preventDefault();
 	var retorno = verificarCampos(event);
 	if (retorno) {
-		
-		if(validarImagem(imgPrincipal.getAttribute('src'))){
+
+		if (validarImagem(imgPrincipal.getAttribute('src'))) {
 			amazenarDados();
-		localStorage.clear();
-		}else{
+			localStorage.clear();
+		} else {
 			alert("Escolha uma foto !");
 		}
 	}

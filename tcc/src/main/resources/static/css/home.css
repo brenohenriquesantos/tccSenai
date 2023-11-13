@@ -685,6 +685,7 @@ progress {
   margin-right: calc(-0.5 * var(--bs-gutter-x));
   margin-left: calc(-0.5 * var(--bs-gutter-x));
   gap: 2rem;
+  align-items: center;
 }
 .row > * {
   flex-shrink: 0;
@@ -10873,7 +10874,7 @@ body{
 #sobre{
   display: flex;
   flex-direction: column;
-  gap: 6rem;
+  gap: 1rem;
 }
 
 #sobre p{

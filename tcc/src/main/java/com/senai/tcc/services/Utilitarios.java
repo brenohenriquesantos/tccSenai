@@ -86,7 +86,7 @@ public class Utilitarios {
 	}
 	
 	public static void validarImgBase64(String img64) throws InvalidFotoException {
-		if(StringUtils.isBlank(img64)) {
+		if(StringUtils.isBlank(img64) || img64.equals("null")) {
 			throw new InvalidFotoException("A foto não pode ser vazia !");
 		}
 	}

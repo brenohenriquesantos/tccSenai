@@ -171,7 +171,7 @@ cep.addEventListener('blur', () => {
 	buscarEndereco(cepValor);
 });
 
-function toBase64(imagem) {
+function imgToBase64(imagem) {
 	return new Promise((resolve, reject) => {
 		const arquivo = imagem.files[0];
 
@@ -183,8 +183,33 @@ function toBase64(imagem) {
 		const reader = new FileReader();
 
 		reader.onloadend = function() {
-			const imagem64 = reader.result.replace("data:", "").replace(/^.+,/, "");
-			resolve(imagem64);
+			const img = new Image();
+			img.src = reader.result;
+
+			img.onload = function() {
+				const canvas = document.createElement('canvas');
+				const canvasContexto = canvas.getContext('2d');
+
+				const larguraImg = 1366;
+				const alturaImg = 768;
+
+				canvas.width = larguraImg;
+				canvas.height = alturaImg;
+
+				canvasContexto.drawImage(img, 0, 0, larguraImg, alturaImg);
+				try {
+					const imagem64 = canvas.toDataURL('image/jpeg', 0.8);
+					resolve(imagem64);
+				} catch (error) {
+					reject(new Error("Erro ao processar a imagem"));
+				}
+
+			}
+
+			img.onerror = function() {
+				reject(new Error("Erro ao carregar a imagem"));
+			}
+
 		}
 
 		reader.onerror = function() {
@@ -197,9 +222,10 @@ function toBase64(imagem) {
 
 async function processarImagem() {
 	try {
-		const imagem64 = await toBase64(file_input);
+		const imagem64 = await imgToBase64(file_input);
 		return imagem64;
 	} catch (error) {
+		console.error(error.mesage);
 		return null;
 	}
 }
@@ -244,7 +270,7 @@ btnEnviar.addEventListener('click', async () => {
 				},
 				fotoBase64: imagemData,
 				descricao: descricao.value,
-				entrada_acessivel: obterValorRadio(radiosAcessibilidade1),
+				rampa_acessivel: obterValorRadio(radiosAcessibilidade1),
 				estacionamento_acessivel: obterValorRadio(radiosAcessibilidade2),
 				banheiro_acessivel: obterValorRadio(radiosAcessibilidade3)
 			};
@@ -259,6 +285,7 @@ btnEnviar.addEventListener('click', async () => {
 
 			if (resposta.ok) {
 				alert("Salvo Com Sucesso !");
+				window.location.href = '/'
 			}
 
 		} catch (error) {
