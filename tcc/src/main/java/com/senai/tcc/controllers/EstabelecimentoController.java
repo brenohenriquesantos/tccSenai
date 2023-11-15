@@ -67,4 +67,19 @@ public class EstabelecimentoController {
 	public String obterFormEstabelecimento() {
 		return "estabelecimento/formEstabelecimento";
 	}
+	
+	@PostMapping("/verificarCnpj")
+	public ResponseEntity<?> consultarCnpj(@RequestBody String cnpj){
+		try {
+			if(estService.consultarEstByCnpj(cnpj)) {
+				return ResponseEntity.ok("CNPJ já cadastrado !");
+			}
+			
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("CNPJ não encontrado !");
+		} catch (InvalidCnpjException e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}catch (Exception e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+	}
 }

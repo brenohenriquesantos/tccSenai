@@ -11,7 +11,7 @@ const cep = document.querySelector('#cep');
 const bairro = document.querySelector("#bairro");
 const logradouro = document.querySelector("#logradouro");
 const localidade = document.querySelector("#localidade");
-const btnEnviar = document.querySelector('#btnEnviar');
+const btnProsseguir3 = document.querySelector('#btnProsseguir3');
 const descricao = document.querySelector('#descricao');
 let imagemData = "";
 const radiosAcessibilidade1 = document.querySelectorAll('input[name="acessibilidade"]');
@@ -20,6 +20,12 @@ const radiosAcessibilidade3 = document.querySelectorAll('input[name="acessibilid
 const erroMsg3 = document.querySelector('#erroMsg3');
 const btnProsseguir2 = document.querySelector('#btnProsseguir2');
 const terceiro_form = document.querySelector('#terceiro_form');
+const quarto_form = document.querySelector('#quarto_form');
+const btnEnviar = document.querySelector('#btnEnviar');
+const diasFuncionamento = document.querySelector('#diasFuncionamento');
+const horarioAbertura = document.querySelector('#horarioAbertura');
+const horarioFechamento = document.querySelector('#horarioFechamento');
+
 
 
 
@@ -147,6 +153,45 @@ function limparCep(cep) {
 	return cep;
 }
 
+function validarCamposForm4() {
+	const diaFuncionamento = document.querySelector('#diasFuncionamento');
+	const horarioAbertura = document.querySelector('#horarioAbertura');
+	const horarioFechamento = document.querySelector('#horarioFechamento');
+	const erroMsg3 = document.querySelector('#erroMsg3');
+
+	if (!diaFuncionamento.value.trim()) {
+		erroMsg3.style = 'display: block'
+		erroMsg3.textContent = 'Informe os Dias de Funcionamento !';
+		return false;
+	}
+
+	if (horarioAbertura > horarioFechamento) {
+		erroMsg3.style = 'display: block'
+		erroMsg3.textContent = 'O horario de abertura tem que ser inferior ao de fechamento !';
+		return false;
+	}
+
+	return true;
+}
+
+async function verificarCnpj(cnpj) {
+	const resposta = await fetch('/verificarCnpj', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(cnpj)
+	})
+
+	if (resposta.ok) {
+		let textoErro = await resposta.text();
+		erroMsg.textContent = textoErro;
+		erroMsg.style = 'display: block';
+		return false;
+	}
+
+	return true;
+}
 
 
 
@@ -230,16 +275,20 @@ async function processarImagem() {
 	}
 }
 
-
+cnpj.addEventListener('blur', async () => {
+	verificarCnpj(cnpj.value);
+})
 
 btnProsseguir.addEventListener('click', async () => {
 	if (validarCampos()) {
 
 		imagemData = await processarImagem();
 
-		if (validarImagem(imagemData)) {
-			form.style = 'display:none';
-			terceiro_form.style = 'display:flex';
+		if (verificarCnpj(cnpj.value)) {
+			if (validarImagem(imagemData)) {
+				form.style = 'display:none';
+				terceiro_form.style = 'display:flex';
+			}
 		}
 	}
 })
@@ -252,10 +301,17 @@ btnProsseguir2.addEventListener('click', () => {
 	}
 })
 
+btnProsseguir3.addEventListener('click', () => {
+	if (validarCamposForm2()) {
+		sub_form.style = 'display:none'
+		quarto_form.style = 'display:flex';
+	}
+})
+
 
 
 btnEnviar.addEventListener('click', async () => {
-	if (validarCamposForm2()) {
+	if (validarCamposForm4()) {
 		try {
 
 
@@ -272,7 +328,12 @@ btnEnviar.addEventListener('click', async () => {
 				descricao: descricao.value,
 				rampa_acessivel: obterValorRadio(radiosAcessibilidade1),
 				estacionamento_acessivel: obterValorRadio(radiosAcessibilidade2),
-				banheiro_acessivel: obterValorRadio(radiosAcessibilidade3)
+				banheiro_acessivel: obterValorRadio(radiosAcessibilidade3),
+				estHorario: {
+					diaSemana: diasFuncionamento.value,
+					horarioAbertura: horarioAbertura.value,
+					horarioFechamento: horarioFechamento.value
+				}
 			};
 
 			const resposta = await fetch('/estabelecimento/cadastrar', {

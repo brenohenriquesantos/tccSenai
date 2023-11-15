@@ -13,4 +13,5 @@ import com.senai.tcc.entities.EstabComentarios;
 public interface EstabComentariosRepository extends JpaRepository<EstabComentarios, Long> {
 	@Query(value = "select * from estab_comentarios where estabelecimentoid = :estabID order by id DESC", nativeQuery = true)
 	List<EstabComentarios> obterComentariosEstab(@Param("estabID") Long estabID);
+
 }

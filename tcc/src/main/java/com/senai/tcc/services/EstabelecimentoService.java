@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.senai.tcc.components.Base64ToByte;
 import com.senai.tcc.components.ByteToBase64;
+import com.senai.tcc.entities.EstHorarioFuncionamento;
 import com.senai.tcc.entities.Estabelecimento;
 import com.senai.tcc.exceptions.InvalidCnpjException;
 import com.senai.tcc.exceptions.ProcessamentoException;
@@ -50,7 +51,7 @@ public class EstabelecimentoService {
 				.orElseThrow(() -> new IllegalArgumentException("Estabelecimento não encontrado !"));
 
 		est = conveterImgToBase64(est);
-		
+
 		validarEstabelecimento(est);
 
 		return est;
@@ -94,6 +95,30 @@ public class EstabelecimentoService {
 		}
 
 		Utilitarios.validarCNPJ(estabelecimento.getCnpj());
+
+		validarHorario(estabelecimento.getEstHorario());
+
+	}
+
+	public boolean consultarEstByCnpj(String cnpj) throws InvalidCnpjException {
+
+		cnpj = LimparCNPJ.limpar(cnpj);
+
+		Utilitarios.validarCNPJ(cnpj);
+
+		return estRepository.findByCnpj(cnpj).isPresent();
+
+	}
+
+	private void validarHorario(EstHorarioFuncionamento horario) {
+
+		if (StringUtils.isBlank(horario.getDiaSemana())) {
+			throw new IllegalArgumentException("Campo dia de funcionamento não pode ser vazio");
+		}
+
+		if (horario.getHorarioAbertura().after(horario.getHorarioFechamento())) {
+			throw new IllegalArgumentException("O horario de abertura deve ser anterior ao de fechamento !");
+		}
 	}
 
 	private void validarID(Long id) {

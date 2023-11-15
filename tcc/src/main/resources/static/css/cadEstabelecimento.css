@@ -171,3 +171,16 @@ body {
   margin: 0;
 }
 
+
+#quarto_form{
+	display: none;
+}
+
+#quarto_form label{
+	text-align: left;
+	font-weight: bold;
+}
+
+ input[type="time"]::-webkit-calendar-picker-indicator {
+            display: none;
+        }
