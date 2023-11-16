@@ -1,14 +1,14 @@
 package com.senai.tcc.entities;
 
-import java.sql.Time;
+import java.time.LocalTime;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,10 +25,9 @@ public class EstHorarioFuncionamento {
 	@Column(nullable = false)
 	private String diaSemana;
 	@Column(nullable = false)
-	private Time horarioAbertura;
+	@JsonFormat(pattern = "HH:mm", timezone = "America/Sao_Paulo")
+	private LocalTime horarioAbertura;
+	@JsonFormat(pattern = "HH:mm", timezone = "America/Sao_Paulo")
 	@Column(nullable = false)
-	private Time horarioFechamento;
-	@OneToOne
-	@JoinColumn(name = "estabelecimento_id")
-	private Estabelecimento est;
+	private LocalTime horarioFechamento;
 }

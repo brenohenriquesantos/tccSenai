@@ -175,22 +175,34 @@ function validarCamposForm4() {
 }
 
 async function verificarCnpj(cnpj) {
-	const resposta = await fetch('/verificarCnpj', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify(cnpj)
-	})
 
-	if (resposta.ok) {
-		let textoErro = await resposta.text();
-		erroMsg.textContent = textoErro;
-		erroMsg.style = 'display: block';
-		return false;
-	}
+		if(cnpj.trim()){
+			const resposta = await fetch('/verificarCnpj', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(cnpj)
+		})
 
-	return true;
+		let erroAtivo = false;
+
+		if (resposta.ok && erroAtivo == false) {
+			let textoErro = await resposta.text();
+			erroMsg.textContent = textoErro;
+			erroMsg.style = 'display: block';
+			erroAtivo = true;
+			return false;
+		} else {
+			erroMsg.style = 'display: none';
+			return true;
+		}
+
+		}
+		
+
+
+
 }
 
 

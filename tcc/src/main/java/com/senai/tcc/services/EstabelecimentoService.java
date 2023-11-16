@@ -30,9 +30,13 @@ public class EstabelecimentoService {
 		estabelecimento.setCnpj(LimparCNPJ.limpar(estabelecimento.getCnpj()));
 
 		estabelecimento.setImgEstabelecimento(convertBase64ToByte(estabelecimento));
-
+		
 		estRepository.save(estabelecimento);
 	}
+	
+
+	
+	
 
 	public List<Estabelecimento> obterAcessados() throws Exception {
 		List<Estabelecimento> estabelecimentos = estRepository.findMostAcess();
@@ -116,7 +120,7 @@ public class EstabelecimentoService {
 			throw new IllegalArgumentException("Campo dia de funcionamento não pode ser vazio");
 		}
 
-		if (horario.getHorarioAbertura().after(horario.getHorarioFechamento())) {
+		if (horario.getHorarioAbertura().isAfter(horario.getHorarioFechamento())) {
 			throw new IllegalArgumentException("O horario de abertura deve ser anterior ao de fechamento !");
 		}
 	}

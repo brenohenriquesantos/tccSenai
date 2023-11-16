@@ -50,7 +50,7 @@ public class Estabelecimento {
 	@Column(nullable = false, length = 3)
 	private String banheiro_acessivel;
 	@JoinColumn(name = "horario_id")
-	@OneToOne(mappedBy = "est", cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL)
 	private EstHorarioFuncionamento estHorario;
 
 	
