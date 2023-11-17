@@ -31,10 +31,16 @@ public class EstabelecimentoService {
 
 		estabelecimento.setImgEstabelecimento(convertBase64ToByte(estabelecimento));
 		
+		limparCep(estabelecimento);
+		
 		estRepository.save(estabelecimento);
 	}
 	
 
+	private void limparCep(Estabelecimento est) {
+		est.setCep(LimparCEP.limpar(est.getCep()));
+	}
+	
 	
 	
 

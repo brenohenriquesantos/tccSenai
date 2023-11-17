@@ -10,6 +10,11 @@ const btnEnviar = document.querySelector('#btnEnviar');
 const message = document.querySelector('#message');
 const numeroComentarios = document.querySelector('#numeroComentarios');
 const comentarios = document.querySelector('#comentarios');
+const map = L.map('map');
+
+let latitude = 0;
+let longitude = 0;
+let marker, circle, zoomed;
 
 
 
@@ -22,6 +27,12 @@ function obterIdUrl() {
 	var id = urlParametro.get('id');
 
 	return id;
+}
+
+function limparCep(cep) {
+	cep = cep.replace(/[^0-9]/g, '');
+
+	return cep;
 }
 
 
@@ -57,8 +68,8 @@ function alterarBackgroundServices(dados) {
 
 function obterValorCookie(nomeCookie) {
 	var cookieString = document.cookie.split(';').find(row => row.trim().startsWith(nomeCookie + '='));
-	
-	if(!cookieString){
+
+	if (!cookieString) {
 		return null;
 
 	}
@@ -98,7 +109,7 @@ function criarCorpoComentario(comentario) {
 
 
 	let ul = document.createElement('ul');
-    ul.classList.add("list-unstyled", "list-inline", "media-detail", "pull-left");
+	ul.classList.add("list-unstyled", "list-inline", "media-detail", "pull-left");
 
 
 	let li = document.createElement('li');
@@ -136,7 +147,7 @@ function criarComentario(comentario) {
 	let divBody = criarCorpoComentario(comentario);
 
 	div.appendChild(divBody);
-	
+
 	return div;
 
 }
@@ -148,55 +159,55 @@ async function listarComentarios() {
 		const listaComentarios = await obterComentarios(idForm);
 
 		numeroComentarios.textContent = listaComentarios.length + " Comentario(s)";
-		
-		listaComentarios.forEach(comentario =>{
-			
+
+		listaComentarios.forEach(comentario => {
+
 			let divComentario = criarComentario(comentario);
 			comentarios.appendChild(divComentario);
 		})
 
 	} catch (Erro) {
-		
+
 		alert(Erro);
 	}
 
 
 }
 
-async function carregarImgUsr(){
-	
-	if(verificarUsrLogado()){
-		
+async function carregarImgUsr() {
+
+	if (verificarUsrLogado()) {
+
 		const id = obterValorCookie('usuarioID');
-		
+
 		const resposta = await fetch('/usuario/consultar?id=' + id);
-		
-		if(resposta.ok){
-			
+
+		if (resposta.ok) {
+
 			const dados = await resposta.json();
-			
+
 			const imgUsr = document.querySelector('#imgUsr');
-			
+
 			imgUsr.src = "data:image/jpeg;base64," + dados.fotoBase64;
 		}
 	}
-	
-	
+
+
 }
 
-function verificarUsrLogado(){
+function verificarUsrLogado() {
 	const idUsr = obterValorCookie('usuarioID');
-	
-	if(idUsr != null){
+
+	if (idUsr != null) {
 		return true;
 	}
-	
+
 	return false;
 }
 
 function formatarData(data) {
-  const dataFormatada = moment(data);
-   return dataFormatada.format('DD/MM/YYYY');
+	const dataFormatada = moment(data);
+	return dataFormatada.format('DD/MM/YYYY');
 }
 
 
@@ -212,8 +223,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 	alterarBackgroundServices(dados);
 
 	listarComentarios();
-	
+
 	carregarImgUsr();
+
+	obterLatELong(dados.endereco.cep);
 })
 
 
@@ -221,12 +234,12 @@ btnEnviar.addEventListener('click', async (event) => {
 	event.preventDefault();
 	const idForm = obterIdUrl();
 	const idUsr = obterValorCookie('usuarioID');
-	
-	if(!idUsr){
+
+	if (!idUsr) {
 		alert("Faça login para comentar !");
 		return;
 	}
-	
+
 	const comentarioTexto = message.value;
 
 	const dados = {
@@ -246,7 +259,7 @@ btnEnviar.addEventListener('click', async (event) => {
 
 		if (resposta.ok) {
 			location.reload();
-		}else{
+		} else {
 			const txtErro = await resposta.text();
 			alert(txtErro);
 		}
@@ -259,3 +272,72 @@ btnEnviar.addEventListener('click', async (event) => {
 
 
 })
+
+async function obterLatELong(cep) {
+
+	cep = limparCep(cep);
+
+	const urlGeo = 'https://nominatim.openstreetmap.org/search?format=json&postalcode=' + cep;
+
+	const resposta = await fetch(urlGeo);
+
+	const dados = await resposta.json();
+
+	if (dados.length > 0) {
+		latitude = parseFloat(dados[0].lat);
+		longitude = parseFloat(dados[0].lon);
+
+		map.setView([latitude, longitude], 15);
+
+		marcadorMapa();
+	}
+
+}
+
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+	maxZoom: 19,
+	attribution: '© OpenStreetMap'
+}).addTo(map);
+
+
+
+function marcadorMapa() {
+
+	const lat = latitude;
+	const lng = longitude;
+
+	if (marker) {
+		map.removeLayer(marker);
+	}
+
+	marker = L.marker([lat, lng]).addTo(map);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
