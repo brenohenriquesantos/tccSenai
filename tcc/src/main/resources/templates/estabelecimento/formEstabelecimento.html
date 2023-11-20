@@ -7,7 +7,9 @@
 	<meta name="description" content="" />
 	<meta name="author" content="" />
 	<title>ODIN</title>
-	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+		integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
 		integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
@@ -101,15 +103,47 @@
 		</div>
 
 	</div>
-	
-		<div id="caixaLocal">
-		<div id="localizaoTexto">
-			<h2>Localização</h2>
-			<p>Avenida Tancredo Neves 148 Caminho das Árvores, Salvador, State of Bahia 41820-908</p>
+
+	<div id="caixaLocal">
+
+
+
+		<div id="caixaMedia">
+
+			<div id="localizaoTexto">
+				<h2>Localização</h2>
+				<p id="textoLocal"></p>
+			</div>
+
+			<div id="map">
+
+			</div>
 		</div>
-		<div id="map">
+
+
+		<div id="horarioLocal">
+
+			<div class="unit__option">
+
+
+				<p><i class="fa-regular fa-clock"></i> Horário de funcionamento</p>
+
+
+				<p id="diaHorario"><strong></strong></p>
+				<p id="horario">Almoço: 11:30h às 15h</p>
+			</div>
+
+			<div class="unit__option">
+
+				<p id><i class="fa-solid fa-phone"></i> Telefone</p>
+
+				<p id="telefone">(71) 3359-9000</p>
+			</div>
 
 		</div>
+
+
+
 	</div>
 
 
@@ -129,7 +163,7 @@
 				<button class="btn btn-normal pull-right" id="btnEnviar">Enviar</button>
 			</div>
 		</div>
-		<h3 id="numeroComentarios"> 5 Comentarios</h3>
+		<h3 id="numeroComentarios"></h3>
 
 		<div id="comentarios">
 

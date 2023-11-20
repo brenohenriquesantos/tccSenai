@@ -12319,3 +12319,17 @@ footer {
 #caixaLocal p{
     font-family: 'Times New Roman', Times, serif;
 }
+
+#caixaLocal{
+	display: flex;
+    align-items: center;
+    gap: 2rem;
+    flex-direction: row;
+}
+
+.unit__option{
+	font-weight: bold;
+	font-size: 17px;
+}
+
+

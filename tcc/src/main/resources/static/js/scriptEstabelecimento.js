@@ -12,11 +12,29 @@ const numeroComentarios = document.querySelector('#numeroComentarios');
 const comentarios = document.querySelector('#comentarios');
 const map = L.map('map');
 
+const textoLocal = document.querySelector('#textoLocal');
+const diaHorario = document.querySelector('#diaHorario');
+const horario = document.querySelector('#horario');
+const telefone = document.querySelector('#telefone');
+
 let latitude = 0;
 let longitude = 0;
 let marker, circle, zoomed;
 
 
+map.on('click', (event)=> {
+
+    if(marker !== null){
+        map.removeLayer(marker);
+    }
+
+    marker = L.marker([event.latlng.lat , event.latlng.lng]).addTo(map);
+
+    console.log(event.latlng.lat);
+    console.log(event.latlng.lng);
+    console.log(event);
+    
+})
 
 
 function obterIdUrl() {
@@ -210,6 +228,32 @@ function formatarData(data) {
 	return dataFormatada.format('DD/MM/YYYY');
 }
 
+function preencherLocalTexto(dados) {
+	const logradouro = dados.endereco.logradouro;
+	const bairro = dados.endereco.bairro;
+	const localidade = dados.endereco.localidade;
+	const cepLocal = mascaraCep(dados.endereco.cep);
+
+	textoLocal.textContent = logradouro + ', ' + bairro + ', ' + localidade + ', ' + cepLocal;
+}
+
+function mascaraCep(cep) {
+	
+     let cepQuebra1 = cep.substring(0,2);
+     let cepQuebra2 = cep.substring(2,5);
+     let cepQuebra3 = cep.substring(5,8);
+     
+     cep = cepQuebra1 + '.' + cepQuebra2 + '-' + cepQuebra3;
+	
+	
+	return cep;
+}
+
+function popularHorarioEstab(dados){
+	diaHorario.textContent = dados.estHorario.diaSemana;
+	horario.textContent =  dados.estHorario.horarioAbertura + ' ás ' + dados.estHorario.horarioFechamento;
+}
+
 
 document.addEventListener('DOMContentLoaded', async () => {
 	const id = obterIdUrl();
@@ -219,6 +263,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 	titulo.textContent = dados.nome;
 	descricao.textContent = dados.descricao;
 	imgEstabelecimento.src = "data:image/jpeg;base64," + dados.fotoBase64;
+
+	preencherLocalTexto(dados);
+	
+	popularHorarioEstab(dados);
 
 	alterarBackgroundServices(dados);
 
