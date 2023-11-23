@@ -29,8 +29,6 @@ public class Utilitarios {
 			throw new InvalidEmailException("Email vazio");
 		}
 	}
-	
-	
 
 	public static void validarCPF(String cpf) throws InvalidCpfException {
 
@@ -44,15 +42,15 @@ public class Utilitarios {
 			throw new InvalidCpfException("CPF invalido");
 		}
 	}
-	
+
 	public static void validarCNPJ(String cnpj) throws InvalidCnpjException {
 		cnpj = LimparCNPJ.limpar(cnpj);
-		
-		if(StringUtils.isBlank(cnpj)){
+
+		if (StringUtils.isBlank(cnpj)) {
 			throw new InvalidCnpjException("o campo CNPJ não pode ser nulo");
 		}
-		
-		if(cnpj.length() != 14) {
+
+		if (cnpj.length() != 14) {
 			throw new InvalidCnpjException("CNPJ invalido");
 		}
 	}
@@ -84,10 +82,18 @@ public class Utilitarios {
 			throw new InvalidAlgorithmParameterException("A senha não pode ser vazia !");
 		}
 	}
-	
+
 	public static void validarImgBase64(String img64) throws InvalidFotoException {
-		if(StringUtils.isBlank(img64) || img64.equals("null")) {
+		if (StringUtils.isBlank(img64) || img64.equals("null")) {
 			throw new InvalidFotoException("A foto não pode ser vazia !");
+
+		}
+
+	}
+
+	public static void validarCampoString(String nomeDoCampo, String texto) {
+		if (StringUtils.isBlank(texto)) {
+			throw new IllegalArgumentException("O " + nomeDoCampo + "não pode ser nulo !");
 		}
 	}
 

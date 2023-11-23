@@ -3,13 +3,16 @@ package com.senai.tcc.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.senai.tcc.components.Base64ToByte;
 import com.senai.tcc.components.ByteToBase64;
+import com.senai.tcc.components.RespostaConsultaEstab;
 import com.senai.tcc.entities.EstHorarioFuncionamento;
 import com.senai.tcc.entities.Estabelecimento;
 import com.senai.tcc.exceptions.InvalidCnpjException;
+import com.senai.tcc.exceptions.NotFoundEstabelecimentos;
 import com.senai.tcc.exceptions.ProcessamentoException;
 import com.senai.tcc.repositories.EstabelecimentoRepository;
 
@@ -30,19 +33,21 @@ public class EstabelecimentoService {
 		estabelecimento.setCnpj(LimparCNPJ.limpar(estabelecimento.getCnpj()));
 
 		estabelecimento.setImgEstabelecimento(convertBase64ToByte(estabelecimento));
-		
+
 		limparCep(estabelecimento);
-		
+
+		limparTelefone(estabelecimento);
+
 		estRepository.save(estabelecimento);
 	}
-	
 
 	private void limparCep(Estabelecimento est) {
 		est.setCep(LimparCEP.limpar(est.getCep()));
 	}
-	
-	
-	
+
+	private void limparTelefone(Estabelecimento est) {
+		est.setTelefone(LimparTelefone.limpar(est.getTelefone()));
+	}
 
 	public List<Estabelecimento> obterAcessados() throws Exception {
 		List<Estabelecimento> estabelecimentos = estRepository.findMostAcess();
@@ -136,5 +141,16 @@ public class EstabelecimentoService {
 			throw new IllegalArgumentException("O ID não pode ser nulo !");
 		}
 	}
+
+	public List<Estabelecimento> obterEstabsPeloNome(String nome) throws NotFoundEstabelecimentos {
+		
+		Utilitarios.validarCampoString("Estabelecimento", nome);
+		
+		List<Estabelecimento> estabs = estRepository.findEstabsByName(nome)
+				.orElseThrow(() -> new NotFoundEstabelecimentos("Nenhum resultado encontrado..."));
+
+		return estabs;
+	}
+	
 
 }

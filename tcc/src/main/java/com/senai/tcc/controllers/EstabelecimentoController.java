@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.senai.tcc.entities.Estabelecimento;
 import com.senai.tcc.exceptions.InvalidCnpjException;
+import com.senai.tcc.exceptions.NotFoundEstabelecimentos;
 import com.senai.tcc.exceptions.ProcessamentoException;
 import com.senai.tcc.services.EstabelecimentoService;
 
@@ -80,6 +81,17 @@ public class EstabelecimentoController {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}catch (Exception e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+	}
+	
+	@PostMapping("/consultarEstabelecimentos")
+	public ResponseEntity<?> consultarEstabelecimentos(@RequestBody String nome){
+		try {
+			return ResponseEntity.ok(estService.obterEstabsPeloNome(nome));
+		}catch (NotFoundEstabelecimentos e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}catch (Exception e) {
+			return ResponseEntity.internalServerError().body("Ocorreu um erro ao consultar");
 		}
 	}
 }

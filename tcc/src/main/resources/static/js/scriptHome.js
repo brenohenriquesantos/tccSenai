@@ -20,6 +20,23 @@ function deleteCookie(name, path, domain) {
 	}
 }
 
+function scrollBar() {
+	var navbar = document.querySelector('.navbar');
+	var lastScrollTop = 0;
+
+	window.addEventListener('scroll', function() {
+		var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+		if (scrollTop > lastScrollTop) {
+			navbar.style.top = '-56px'; /* Change the value to your navbar height */
+		} else {
+			navbar.style.top = '0';
+		}
+
+		lastScrollTop = scrollTop;
+	});
+}
+
 
 if (verificarCookie(nomeCookie)) {
 	linkLogin.textContent = 'Deslogar'
@@ -76,9 +93,6 @@ async function popularEstabelecimentos() {
 
 function verificarAdm() {
 	const isAdm = sessionStorage.getItem('isAdm');
-
-
-
 }
 
 
@@ -86,6 +100,8 @@ function verificarAdm() {
 
 document.addEventListener('DOMContentLoaded', () => {
 	popularEstabelecimentos();
+
+	scrollBar()
 
 	verificarAdm();
 })

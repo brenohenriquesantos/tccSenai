@@ -52,6 +52,8 @@ public class Estabelecimento {
 	@JoinColumn(name = "horario_id")
 	@OneToOne(cascade = CascadeType.ALL)
 	private EstHorarioFuncionamento estHorario;
+	@Column(nullable = false)
+	private String telefone;
 	
 	public String getCep() {
 		return endereco.getCep();

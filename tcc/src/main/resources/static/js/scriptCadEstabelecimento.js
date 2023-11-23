@@ -25,6 +25,7 @@ const btnEnviar = document.querySelector('#btnEnviar');
 const diasFuncionamento = document.querySelector('#diasFuncionamento');
 const horarioAbertura = document.querySelector('#horarioAbertura');
 const horarioFechamento = document.querySelector('#horarioFechamento');
+const telefone = document.querySelector('#telefone');
 
 
 
@@ -47,6 +48,24 @@ function mascaraCNPJ() {
 	cnpj.value = cnpjLimpo;
 }
 
+const handlePhone = (event) => {
+  let input = event.target
+  input.value = mascaraTelefone(input.value)
+}
+
+function mascaraTelefone(valor){
+	if(!valor){
+		return "";
+	}
+	
+	valor = valor.replace(/\D/g,'')
+  	valor = valor.replace(/(\d{2})(\d)/,"($1) $2")
+  	valor = valor.replace(/(\d)(\d{4})$/,"$1-$2")
+  	
+  	return valor;
+}
+
+
 
 function obterValorRadio(radio) {
 	for (var i = 0; i < radio.length; i++) {
@@ -58,20 +77,8 @@ function obterValorRadio(radio) {
 }
 
 function validarCampos() {
-	if (!nome.value.trim() || !cnpj.value.trim()) {
+	if (!nome.value.trim() || !cnpj.value.trim() || !descricao.value.trim() || !telefone.value.trim()) {
 		erroMsg.textContent = "Preencha todos os campos !";
-		erroMsg.style = 'display: block';
-		return false;
-	}
-
-	if (!descricao.value.trim()) {
-		erroMsg.textContent = "Preencha todos os campos !";
-		erroMsg.style = 'display: block';
-		return false;
-	}
-
-	if (cnpj.value.length != 18) {
-		erroMsg.textContent = "CNPJ invalido !";
 		erroMsg.style = 'display: block';
 		return false;
 	}
@@ -345,7 +352,8 @@ btnEnviar.addEventListener('click', async () => {
 					diaSemana: diasFuncionamento.value,
 					horarioAbertura: horarioAbertura.value,
 					horarioFechamento: horarioFechamento.value
-				}
+				},
+				telefone: telefone.value
 			};
 
 			const resposta = await fetch('/estabelecimento/cadastrar', {
@@ -368,6 +376,9 @@ btnEnviar.addEventListener('click', async () => {
 		}
 	}
 })
+
+
+
 
 
 

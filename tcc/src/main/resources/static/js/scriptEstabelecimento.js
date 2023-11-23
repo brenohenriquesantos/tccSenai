@@ -22,19 +22,20 @@ let longitude = 0;
 let marker, circle, zoomed;
 
 
-map.on('click', (event)=> {
+map.on('click', (event) => {
 
-    if(marker !== null){
-        map.removeLayer(marker);
-    }
+	if (marker !== null) {
+		map.removeLayer(marker);
+	}
 
-    marker = L.marker([event.latlng.lat , event.latlng.lng]).addTo(map);
+	marker = L.marker([event.latlng.lat, event.latlng.lng]).addTo(map);
 
-    console.log(event.latlng.lat);
-    console.log(event.latlng.lng);
-    console.log(event);
-    
+	console.log(event.latlng.lat);
+	console.log(event.latlng.lng);
+	console.log(event);
+
 })
+
 
 
 function obterIdUrl() {
@@ -46,6 +47,25 @@ function obterIdUrl() {
 
 	return id;
 }
+
+function adicionarMascaraTelefone(telefone) {
+	if (!telefone) {
+		return "";
+	}
+
+	let telefoneDD = "(" + telefone.substring(0, 2) + ") ";
+
+	let telefoneSemDD = telefone.substring(2, 14);
+
+	telefoneSemDD = telefoneSemDD.substring(0, 5) + '-' + telefoneSemDD.substring(4, 9);
+
+
+	telefone = telefoneDD + telefoneSemDD;
+
+
+	return telefone;
+}
+
 
 function limparCep(cep) {
 	cep = cep.replace(/[^0-9]/g, '');
@@ -238,20 +258,21 @@ function preencherLocalTexto(dados) {
 }
 
 function mascaraCep(cep) {
-	
-     let cepQuebra1 = cep.substring(0,2);
-     let cepQuebra2 = cep.substring(2,5);
-     let cepQuebra3 = cep.substring(5,8);
-     
-     cep = cepQuebra1 + '.' + cepQuebra2 + '-' + cepQuebra3;
-	
-	
+
+	let cepQuebra1 = cep.substring(0, 2);
+	let cepQuebra2 = cep.substring(2, 5);
+	let cepQuebra3 = cep.substring(5, 8);
+
+	cep = cepQuebra1 + '.' + cepQuebra2 + '-' + cepQuebra3;
+
+
 	return cep;
 }
 
-function popularHorarioEstab(dados){
+function popularHorarioEstab(dados) {
 	diaHorario.textContent = dados.estHorario.diaSemana;
-	horario.textContent =  dados.estHorario.horarioAbertura + ' ás ' + dados.estHorario.horarioFechamento;
+	horario.textContent = dados.estHorario.horarioAbertura + ' ás ' + dados.estHorario.horarioFechamento;
+	telefone.textContent = adicionarMascaraTelefone(dados.telefone);
 }
 
 
@@ -265,7 +286,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 	imgEstabelecimento.src = "data:image/jpeg;base64," + dados.fotoBase64;
 
 	preencherLocalTexto(dados);
-	
+
 	popularHorarioEstab(dados);
 
 	alterarBackgroundServices(dados);
@@ -360,6 +381,8 @@ function marcadorMapa() {
 
 	marker = L.marker([lat, lng]).addTo(map);
 }
+
+
 
 
 

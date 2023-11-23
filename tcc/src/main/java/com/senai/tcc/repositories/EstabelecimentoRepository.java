@@ -18,4 +18,9 @@ public interface EstabelecimentoRepository extends JpaRepository<Estabelecimento
 	@Query(value = "select * from estabelecimento\r\n"
 			+ "where cnpj = :cnpj", nativeQuery = true)
 	Optional<Estabelecimento> findByCnpj(@Param("cnpj") String cnpj);
+	
+	@Query(value = "select id, nome,img_estabelecimento\r\n"
+			+ "from estabelecimento\r\n"
+			+ "where nome like %:nome%", nativeQuery = true)
+	Optional<List<Estabelecimento>> findEstabsByName(@Param("nome") String nome);
 }
