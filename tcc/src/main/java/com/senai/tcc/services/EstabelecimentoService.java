@@ -2,12 +2,15 @@ package com.senai.tcc.services;
 
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.senai.tcc.components.Base64ToByte;
 import com.senai.tcc.components.ByteToBase64;
+import com.senai.tcc.components.EstabFiltros;
 import com.senai.tcc.components.RespostaConsultaEstab;
 import com.senai.tcc.entities.EstHorarioFuncionamento;
 import com.senai.tcc.entities.Estabelecimento;
@@ -143,12 +146,42 @@ public class EstabelecimentoService {
 	}
 
 	public List<Estabelecimento> obterEstabsPeloNome(String nome) throws NotFoundEstabelecimentos {
-		
-		Utilitarios.validarCampoString("Estabelecimento", nome);
-		
-		List<Estabelecimento> estabs = estRepository.findEstabsByName(nome)
-				.orElseThrow(() -> new NotFoundEstabelecimentos("Nenhum resultado encontrado..."));
 
+		List<Estabelecimento> estabs = estRepository.obterEstabsPeloNome(nome);
+		
+		validarEstabelecimentos(estabs);
+		
+		estabs = conveterImgsToBase64(estabs);
+
+		return estabs;
+	}
+	
+	private void validarEstabelecimentos(List<Estabelecimento> estabs) throws NotFoundEstabelecimentos {
+		if(estabs.isEmpty()) {
+			throw new NotFoundEstabelecimentos("Estabelecimento não encontrado !");
+		}
+	}
+	
+	
+	public List<Estabelecimento> obterEstabs() throws NotFoundEstabelecimentos {
+
+		List<Estabelecimento> estabs = estRepository.findAll();
+		
+		validarEstabelecimentos(estabs);
+		
+		estabs = conveterImgsToBase64(estabs);
+
+		return estabs;
+	}
+	
+	public List<Estabelecimento> obterEstabsFiltrado(EstabFiltros filtros) throws NotFoundEstabelecimentos{
+		List<Estabelecimento> estabs = estRepository.obterEstabsFiltrados(filtros.nome,
+				filtros.banheiro, filtros.rampa, filtros.estacionamento);
+		
+		validarEstabelecimentos(estabs);
+		
+		estabs = conveterImgsToBase64(estabs);
+		
 		return estabs;
 	}
 	

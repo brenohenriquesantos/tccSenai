@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.senai.tcc.components.UsuarioAutenticator;
 import com.senai.tcc.services.CookieService;
@@ -53,5 +54,15 @@ public class LoginController {
 	@GetMapping("/login")
 	public String redirecionarLogin() {
 		return "login/formLogin";
+	}
+	
+	
+	@PostMapping("/deslogar")
+	public ResponseEntity<?> deslogar(@RequestBody String nomeCookie,
+			HttpServletResponse response) {
+		
+		CookieService.deletarCookie(response, nomeCookie);
+		
+		return ResponseEntity.ok(null);
 	}
 }

@@ -63,7 +63,6 @@ public class UsuarioService {
 
 		validarCampos(usr);
 
-		limparCepUsr(usr);
 
 		limparCPF(usr);
 
@@ -162,14 +161,6 @@ public class UsuarioService {
 		return usr;
 	}
 
-	private void limparCepUsr(Usuario usr) {
-		String cep = usr.getEndereco().getCep();
-
-		cep = LimparCEP.limpar(cep);
-
-		usr.getEndereco().setCep(cep);
-
-	}
 
 	private void validarCampos(Usuario usr)
 			throws InvalidCpfException, InvalidAlgorithmParameterException, InvalidFotoException {

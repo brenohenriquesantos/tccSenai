@@ -22,4 +22,12 @@ public class CookieService {
 				.flatMap(cookies -> Arrays.stream(cookies).filter(cookie -> key.equals(cookie.getName())).findAny())
 				.map(e -> e.getValue()).orElse(null);
 	}
+	
+	public static void deletarCookie(HttpServletResponse request, String key) {
+		Cookie cookie = new Cookie(key, null);
+		
+		cookie.setMaxAge(0);
+		
+		request.addCookie(cookie);
+	}
 }

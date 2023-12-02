@@ -1,5 +1,8 @@
 const linkLogin = document.querySelector('#login');
 const nomeCookie = "usuarioID";
+const inputPesquisa = document.querySelector('#inputPesquisa');
+const listaPesquisaResult = document.querySelector('.listaProdutos');
+
 
 function verificarCookie(nomeCookie) {
 	var cookieValor = document.cookie.split(';').find(row => row.trim().startsWith(nomeCookie + '='));
@@ -11,36 +14,27 @@ function verificarCookie(nomeCookie) {
 	return false;
 }
 
-function deleteCookie(name, path, domain) {
-	if (verificarCookie(name)) {
-		document.cookie = name + "=" +
-			((path) ? ";path=" + path : "") +
-			((domain) ? ";domain=" + domain : "") +
-			";expires=Thu, 01 Jan 1970 00:00:01 GMT";
+function deleteCookie(nomeCookie) {
+	fetch('/deslogar', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: nomeCookie
+	}
+	)
+}
+
+
+function verificarLogado() {
+
+	if (verificarCookie(nomeCookie)) {
+		linkLogin.textContent = 'Deslogar'
+	} else {
+		linkLogin.textContent = 'Login'
 	}
 }
 
-function scrollBar() {
-	var navbar = document.querySelector('.navbar');
-	var lastScrollTop = 0;
-
-	window.addEventListener('scroll', function() {
-		var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-
-		if (scrollTop > lastScrollTop) {
-			navbar.style.top = '-56px'; /* Change the value to your navbar height */
-		} else {
-			navbar.style.top = '0';
-		}
-
-		lastScrollTop = scrollTop;
-	});
-}
-
-
-if (verificarCookie(nomeCookie)) {
-	linkLogin.textContent = 'Deslogar'
-}
 
 
 linkLogin.addEventListener('click', () => {
@@ -95,13 +89,75 @@ function verificarAdm() {
 	const isAdm = sessionStorage.getItem('isAdm');
 }
 
+async function obterEstabs(nomeLocal) {
 
+	try {
+		const resposta = await fetch('/consultarEstabNome', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: nomeLocal
+		});
+
+		if (resposta.ok) {
+			const dados = await resposta.json();
+
+			return dados;
+		}
+
+		return null;
+	} catch (error) {
+		console.log('Erro ao consultar o estabelecimento com  o valor informado');
+	}
+
+
+
+}
+
+
+inputPesquisa.addEventListener('input', async (event) => {
+	const nomeAtual = event.target.value
+
+	if (nomeAtual) {
+		const retorno = await obterEstabs(nomeAtual);
+
+		if (retorno != null && retorno.length > 0) {
+
+			listaPesquisaResult.style = 'display:block';
+
+			const ul = document.querySelector('#lista');
+
+			ul.innerHTML = "";
+
+			ul.style = 'display:block';
+
+			for (i = 0; i < retorno.length; i++) {
+				const li = document.createElement("li");
+
+				li.innerHTML = `
+					<a href="/estabelecimento/?id=${retorno[i].id}">
+							<img width="80px" src="data:image/jpeg;base64,${retorno[i].fotoBase64}" alt="">
+							<span class="item-name">${retorno[i].nome}</span>
+					</a>
+		`;
+
+				ul.appendChild(li);
+			}
+		} else {
+			listaPesquisaResult.style = 'display:none';
+		}
+	} else {
+		listaPesquisaResult.style = 'display:none';
+	}
+
+})
 
 
 document.addEventListener('DOMContentLoaded', () => {
 	popularEstabelecimentos();
 
-	scrollBar()
+	verificarLogado()
 
 	verificarAdm();
 })
