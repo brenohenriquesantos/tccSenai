@@ -4,6 +4,7 @@ const linkLogin = document.querySelector('#login');
 const checkRampa = document.querySelector('#rampa');
 const checkEstacionamento = document.querySelector('#estacionamento');
 const checkBanheiro = document.querySelector('#banheiro');
+const linkPerfil = document.querySelector('#perfil');
 
 
 function verificarCookie(nomeCookie) {
@@ -27,9 +28,25 @@ function deleteCookie(nomeCookie) {
 	)
 }
 
+function obterIdLogado() {
+	const cookie = document.cookie.split(';').find(row => row.trim().startsWith(nomeCookie + '='));
+	
+	const id = cookie ? parseInt(cookie.split('=')[1]) : null;
+	
+	return id;
+}
 
-if (verificarCookie(nomeCookie)) {
-	linkLogin.textContent = 'Deslogar'
+function verificarLogado() {
+
+	if (verificarCookie(nomeCookie)) {
+		linkLogin.textContent = 'Deslogar'
+		linkPerfil.style = 'display:block'
+		linkPerfil.href = '/usuario/perfil/?id=' + obterIdLogado();
+		
+	} else {
+		linkPerfil.style = 'display:none'
+		linkLogin.textContent = 'Login'
+	}
 }
 
 
@@ -162,5 +179,6 @@ function filtrar() {
 
 document.addEventListener('DOMContentLoaded', () => {
 	popularEstabsFiltrados();
+	verificarLogado();
 })
 

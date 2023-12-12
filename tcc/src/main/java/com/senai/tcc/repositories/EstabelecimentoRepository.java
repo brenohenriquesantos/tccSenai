@@ -12,25 +12,22 @@ import com.senai.tcc.entities.Estabelecimento;
 
 @Repository
 public interface EstabelecimentoRepository extends JpaRepository<Estabelecimento, Long> {
-	@Query(value = "Select TOP 3 * FROM estabelecimento", nativeQuery = true)
+	@Query(value = "Select TOP 3 * FROM estabelecimento where ativo = 'S' ", nativeQuery = true)
 	List<Estabelecimento> findMostAcess();
 
-	@Query(value = "select * from estabelecimento\r\n" + "where cnpj = :cnpj", nativeQuery = true)
+	@Query(value = "select * from estabelecimento\r\n" + "where cnpj = :cnpj and ativo = 'S'", nativeQuery = true)
 	Optional<Estabelecimento> findByCnpj(@Param("cnpj") String cnpj);
 
-	
-	@Query(value = "select * from estabelecimento where nome like %:nome%", nativeQuery = true)
+	@Query(value = "select * from estabelecimento where nome like %:nome% and ativo = 'S'", nativeQuery = true)
 	List<Estabelecimento> obterEstabsPeloNome(@Param("nome") String nome);
-	
-	@Query(value = "select top(3) * from estabelecimento\r\n"
-	        + "where (nome like %:nome% or :nome is null) and\r\n"
-	        + "(banheiro_acessivel = :banheiro or :banheiro is null) and\r\n"
-	        + "(rampa_acessivel = :rampa or :rampa is null) and\r\n"
-	        + "(estacionamento_acessivel = :estac or :estac is null)", nativeQuery = true)
-	List<Estabelecimento> obterEstabsFiltrados(@Param("nome") String nome,
-	                                           @Param("banheiro") String banheiro,
-	                                           @Param("rampa") String rampa,
-	                                           @Param("estac") String estac);
 
+	@Query(value = "select top(3) * from estabelecimento\r\n" + "where ativo = 'S' and"
+			+ "(nome like %:nome% or :nome is null) and\r\n"
+			+ "(banheiro_acessivel = :banheiro or :banheiro is null) and\r\n"
+			+ "(rampa_acessivel = :rampa or :rampa is null) and\r\n"
+			+ "(estacionamento_acessivel = :estac or :estac is null)", nativeQuery = true)
+	List<Estabelecimento> obterEstabsFiltrados(@Param("nome") String nome, @Param("banheiro") String banheiro,
+			@Param("rampa") String rampa, @Param("estac") String estac);
 
 }
+

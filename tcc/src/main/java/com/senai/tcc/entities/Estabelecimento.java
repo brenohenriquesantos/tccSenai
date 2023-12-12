@@ -54,6 +54,8 @@ public class Estabelecimento {
 	private EstHorarioFuncionamento estHorario;
 	@Column(nullable = false)
 	private String telefone;
+	@Column(nullable = false ,length = 3)
+	private String ativo = "S";
 	
 	public String getCep() {
 		return endereco.getCep();

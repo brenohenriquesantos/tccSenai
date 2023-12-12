@@ -2,6 +2,7 @@ const linkLogin = document.querySelector('#login');
 const nomeCookie = "usuarioID";
 const inputPesquisa = document.querySelector('#inputPesquisa');
 const listaPesquisaResult = document.querySelector('.listaProdutos');
+const linkPerfil = document.querySelector('#perfil');
 
 
 function verificarCookie(nomeCookie) {
@@ -12,6 +13,14 @@ function verificarCookie(nomeCookie) {
 	}
 
 	return false;
+}
+
+function obterIdLogado() {
+	const cookie = document.cookie.split(';').find(row => row.trim().startsWith(nomeCookie + '='));
+	
+	const id = cookie ? parseInt(cookie.split('=')[1]) : null;
+	
+	return id;
 }
 
 function deleteCookie(nomeCookie) {
@@ -30,7 +39,11 @@ function verificarLogado() {
 
 	if (verificarCookie(nomeCookie)) {
 		linkLogin.textContent = 'Deslogar'
+		linkPerfil.style = 'display:block'
+		linkPerfil.href = '/usuario/perfil/?id=' + obterIdLogado();
+		
 	} else {
+		linkPerfil.style = 'display:none'
 		linkLogin.textContent = 'Login'
 	}
 }

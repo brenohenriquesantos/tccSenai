@@ -19,6 +19,7 @@ import com.senai.tcc.exceptions.InvalidFotoException;
 import com.senai.tcc.exceptions.ProcessamentoException;
 import com.senai.tcc.repositories.UsuarioRepository;
 
+import io.micrometer.common.util.StringUtils;
 import javassist.NotFoundException;
 
 @Service
@@ -63,7 +64,6 @@ public class UsuarioService {
 
 		validarCampos(usr);
 
-
 		limparCPF(usr);
 
 		criptografarSenha(usr);
@@ -72,6 +72,44 @@ public class UsuarioService {
 
 		usuarioRepostiory.save(usr);
 
+	}
+
+	public void atualizarUsuario(Usuario usr) throws NotFoundException, ProcessamentoException {
+		Usuario usrExistente = usuarioRepostiory.findById(usr.getId())
+				.orElseThrow(() -> new NotFoundException("Usuario não encontrado !"));
+
+		validarCamposAtualizar(usr);
+
+		usrExistente.setCpf(usr.getCpf());
+
+		usrExistente.setEmail(usr.getEmail());
+
+		usrExistente.setNome(usr.getNome());
+
+		usrExistente.setFotoBase64(usr.getFotoBase64());
+
+		conveterImgBase64ParaByte(usrExistente);
+
+		usuarioRepostiory.save(usrExistente);
+
+	}
+
+	private void validarCamposAtualizar(Usuario usr) {
+		if (StringUtils.isBlank(usr.getNome())) {
+			throw new IllegalArgumentException("Nome não pode ser nulo !");
+		}
+
+		if (StringUtils.isBlank(usr.getEmail())) {
+			throw new IllegalArgumentException("Email não pode ser nulo !");
+		}
+
+		if (StringUtils.isBlank(usr.getCpf())) {
+			throw new IllegalArgumentException("CPF não pode ser nulo !");
+		}
+
+		if (StringUtils.isBlank(usr.getFotoBase64())) {
+			throw new IllegalArgumentException("A foto não pode ser nula !");
+		}
 	}
 
 	public void apagarUsuario(Long id) {
@@ -160,7 +198,6 @@ public class UsuarioService {
 		usr.setFotoBase64(ByteToBase64.transformar(usr.getUsrImg()));
 		return usr;
 	}
-
 
 	private void validarCampos(Usuario usr)
 			throws InvalidCpfException, InvalidAlgorithmParameterException, InvalidFotoException {

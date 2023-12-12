@@ -16,136 +16,14 @@ const textoLocal = document.querySelector('#textoLocal');
 const diaHorario = document.querySelector('#diaHorario');
 const horario = document.querySelector('#horario');
 const telefone = document.querySelector('#telefone');
-const linkLogin = document.querySelector('#login');
-const nomeCookie = "usuarioID";
+
+
 let latitude = 0;
 let longitude = 0;
 let marker, circle, zoomed;
 
 
-function verificarCookie(nomeCookie) {
-	var cookieValor = document.cookie.split(';').find(row => row.trim().startsWith(nomeCookie + '='));
 
-	if (cookieValor) {
-		return true;
-	}
-
-	return false;
-}
-
-function deleteCookie(nomeCookie) {
-	fetch('/deslogar', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		body: nomeCookie
-	}
-	)
-}
-
-
-if (verificarCookie(nomeCookie)) {
-	linkLogin.textContent = 'Deslogar'
-}
-
-
-linkLogin.addEventListener('click', () => {
-	if (verificarCookie(nomeCookie)) {
-		deleteCookie(nomeCookie);
-	}
-
-	window.location.href = "/login"
-
-})
-
-
-async function obterEstabs() {
-	fetch('/consultarEstabs', {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json"
-		}
-	}
-	).then(res => res.json())
-		.then((dados) => {
-
-
-			const ul = document.querySelector('#lista');
-
-			dados.forEach((item) => {
-				const li = document.createElement("li");
-
-				li.innerHTML = `
-					<a href="/estabelecimento/?id=${item.id}">
-							<img width="80px" src="data:image/jpeg;base64,${item.fotoBase64}" alt="">
-							<span class="item-name">${item.nome}</span>
-					</a>
-		`;
-
-				ul.appendChild(li);
-			})
-
-		})
-}
-
-function filtrar() {
-	var input, filter,
-		ul,
-		li,
-		a,
-		i,
-		txtValue,
-		span,
-		count = 0;
-
-	input = document.querySelector('#inputPesquisa');
-
-	div = document.querySelector(".listaProdutos");
-
-	ul = document.querySelector('#lista');
-
-	filter = input.value.toUpperCase();
-
-	if (filter === "") {
-		div.style.display = "none"
-		ul.style.display = "none";
-	} else {
-		li = ul.getElementsByTagName("li");
-
-		for (i = 0; i < li.length; i++) {
-			a = li[i].getElementsByTagName("a")[0];
-
-			txtValue = a.textContent || a.innerText;
-
-			if (txtValue.toUpperCase().indexOf(filter) > -1) {
-				li[i].style.display = "";
-
-				count++;
-
-				span = li[i].querySelector(".item-name");
-
-				if (span) {
-					span.innerHTML = txtValue.replace(new RegExp(filter, "gi"), (match) => {
-						return "<strong>" + match + "</strong>";
-					})
-				}
-			} else {
-				li[i].style.display = "none";
-			}
-		}
-
-		if (count === 0) {
-			div.style.display = "none !important"
-			ul.style.display = "none";
-		} else {
-			div.style.display = "block"
-			ul.style.display = "block"
-		}
-
-	}
-
-}
 
 map.on('click', (event) => {
 
@@ -204,13 +82,13 @@ async function obterEstabelecimento(id) {
 
 	try {
 		if (!resposta.ok) {
-			alert("Deu erro");
+			window.location.href = "/";
 		} else {
 			const dados = await resposta.json();
 			return dados;
 		}
 	} catch (erro) {
-		window.location.href = "/login";
+		window.location.href = "/";
 	}
 
 }
@@ -422,7 +300,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 	obterLatELong(dados.endereco.cep);
 
-	obterEstabs();
 })
 
 

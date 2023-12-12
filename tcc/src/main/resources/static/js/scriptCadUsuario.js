@@ -74,24 +74,6 @@ function validarImagem(dadoImagem) {
 	return true;
 }
 
-async function amazenarDados() {
-
-	event.preventDefault();
-
-	const imagem = await processarImagem();
-
-	localStorage.setItem("cpf", cpf.value);
-	localStorage.setItem("email", email.value);
-	localStorage.setItem("senha", senha.value);
-	localStorage.setItem("data", data.value);
-	localStorage.setItem("nome", nome.value);
-	localStorage.setItem("imagem", imagem);
-
-
-	window.location.href = "/cadastro/";
-
-	return false;
-}
 
 function verificarCPF(cpfParaVerificar) {
 	fetch('/verificarCPF', {
@@ -187,10 +169,39 @@ async function processarImagem() {
 	}
 }
 
+async function enviarDados(){
+	const imagem = await processarImagem();
+	
 
-//funções
+	const dadosJuntos = {
+		cpf: cpf.value,
+		email: email.value,
+		senha: senha.value,
+		data: data.value,
+		nome: nome.value,
+		fotoBase64: imagem
+	};
 
-//eventos
+	const resposta = await fetch("/cadastrarUsuario", {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json"
+		},
+		body: JSON.stringify(dadosJuntos)
+	})
+	
+	if(!resposta.ok){
+		const erroTexto = await resposta.text();
+		alert(erroTexto);
+	}
+	
+	const msgSucesso = await resposta.text();
+	alert(msgSucesso);
+	window.location.href = "/";
+	
+}
+
+
 //Depois de carrregar todo o html
 document.addEventListener("DOMContentLoaded", () => {
 	var anoAtual = new Date().getFullYear();
@@ -242,8 +253,7 @@ btnProsseguir.addEventListener("click", function(event) {
 	if (retorno) {
 
 		if (validarImagem(imgPrincipal.getAttribute('src'))) {
-			amazenarDados();
-			localStorage.clear();
+			enviarDados();
 		} else {
 			alert("Escolha uma foto !");
 		}

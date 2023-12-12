@@ -11441,6 +11441,9 @@ body {
 }
 
 
+
+
+
 .pesquisa {
 	display: flex;
 	align-items: center;
@@ -11505,3 +11508,4 @@ input[type="search"]::-webkit-search-clear-button {
     appearance: none;
     display: none;
 }
+
