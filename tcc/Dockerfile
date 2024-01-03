@@ -1,16 +1,36 @@
-FROM ubuntu:latest AS build
+# Use a imagem oficial do OpenJDK para a fase de construção
+FROM openjdk:17-jdk AS build
 
-RUN apt-get update
-RUN apt-get install openjdk-17-jdk -y
+# Atualize o sistema e instale o Maven
+RUN apt-get update && apt-get install -y maven
+
+# Crie o diretório de trabalho no contêiner
+WORKDIR /app
+
+# Copie apenas o arquivo pom.xml para o contêiner
+COPY pom.xml .
+
+# Baixe as dependências do Maven (isso é feito antes de copiar o código-fonte
+# para aproveitar o cache de dependências se o arquivo pom.xml não mudou)
+RUN mvn dependency:go-offline
+
+# Copie todo o código-fonte para o contêiner
 COPY . .
 
-RUN apt-get install maven -y
-RUN mvn clean install 
+# Construa o projeto com o Maven
+RUN mvn clean install
 
+# Imagem final para a execução
 FROM openjdk:17-jdk-slim
 
+# Defina o diretório de trabalho
+WORKDIR /app
+
+# Copie o JAR construído da fase de construção para a imagem final
+COPY --from=build /app/target/tcc-0.0.1-SNAPSHOT.jar app.jar
+
+# Expõe a porta da aplicação (ajuste conforme necessário)
 EXPOSE 8080
 
-COPY --from=build /target/tcc-0.0.1-SNAPSHOT.jar app.jar
-
-ENTRYPOINT [ "java", "-jar", "app.jar" ]
+# Comando de entrada para iniciar a aplicação Spring Boot
+CMD ["java", "-jar", "app.jar"]
