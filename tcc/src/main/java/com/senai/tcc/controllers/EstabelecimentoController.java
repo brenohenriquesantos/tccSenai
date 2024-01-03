@@ -46,14 +46,23 @@ public class EstabelecimentoController {
 		}
 	}
 
+	@PostMapping("/estabelecimento/acessadosFiltrados")
+	public ResponseEntity<?> acessadosFiltrados(@RequestBody Long idTipo) {
+		try {
+			return ResponseEntity.ok(estService.obterAcessadosFiltrados(idTipo));
+		} catch (Exception e) {
+			return ResponseEntity.internalServerError().body(e.getMessage());
+		}
+
+	}
+	
 	@GetMapping("/estabelecimento/acessados")
-	public ResponseEntity<?> acessados() {
+	public ResponseEntity<?> acessados(){
 		try {
 			return ResponseEntity.ok(estService.obterAcessados());
 		} catch (Exception e) {
 			return ResponseEntity.internalServerError().body(e.getMessage());
 		}
-
 	}
 
 	@GetMapping("/estabelecimento/consultar")

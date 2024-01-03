@@ -8,6 +8,28 @@
 	align-items: center;
 }
 
+@media (max-width:767px) {
+	body {
+		overflow-x: hidden;
+	}
+	
+	.login-page{
+		width: 90% !important;
+		height: 90% !important;
+		margin: 0 !important;
+	}
+	
+	.login-form{
+		gap: 0.7rem !important;
+	}
+	
+	.form{
+		width: 100% !important;
+		padding: 30px !important;
+	}
+	
+	}
+
 .form {
 	position: relative;
 	z-index: 1;
@@ -117,7 +139,6 @@
 
 body {
 	background: #76b852;
-	/* fallback for old browsers */
 	background: rgb(141, 194, 111);
 	background: linear-gradient(90deg, rgba(141, 194, 111, 1) 0%, rgba(118, 184, 82, 1) 50%);
 	font-family: "Roboto", sans-serif;

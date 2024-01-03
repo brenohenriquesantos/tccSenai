@@ -16,6 +16,9 @@ const textoLocal = document.querySelector('#textoLocal');
 const diaHorario = document.querySelector('#diaHorario');
 const horario = document.querySelector('#horario');
 const telefone = document.querySelector('#telefone');
+const linkLogin = document.querySelector('#login');
+const linkPerfil = document.querySelector('#perfil');
+const nomeCookie = "usuarioID";
 
 
 let latitude = 0;
@@ -36,6 +39,58 @@ map.on('click', (event) => {
 	console.log(event.latlng.lat);
 	console.log(event.latlng.lng);
 	console.log(event);
+
+})
+
+function verificarCookie(nomeCookie) {
+	var cookieValor = document.cookie.split(';').find(row => row.trim().startsWith(nomeCookie + '='));
+
+	if (cookieValor) {
+		return true;
+	}
+
+	return false;
+}
+
+function deleteCookie(nomeCookie) {
+	fetch('/deslogar', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: nomeCookie
+	}
+	)
+}
+
+function obterIdLogado() {
+	const cookie = document.cookie.split(';').find(row => row.trim().startsWith(nomeCookie + '='));
+
+	const id = cookie ? parseInt(cookie.split('=')[1]) : null;
+
+	return id;
+}
+
+function verificarLogado() {
+
+	if (verificarCookie(nomeCookie)) {
+		linkLogin.textContent = 'Deslogar'
+		linkPerfil.style = 'display:block'
+		linkPerfil.href = '/usuario/perfil/?id=' + obterIdLogado();
+
+	} else {
+		linkPerfil.style = 'display:none'
+		linkLogin.textContent = 'Login'
+	}
+}
+
+
+linkLogin.addEventListener('click', () => {
+	if (verificarCookie(nomeCookie)) {
+		deleteCookie(nomeCookie);
+	}
+
+	window.location.href = "/login"
 
 })
 
@@ -281,6 +336,8 @@ function popularHorarioEstab(dados) {
 
 document.addEventListener('DOMContentLoaded', async () => {
 	const id = obterIdUrl();
+
+	verificarLogado();
 
 	const dados = await obterEstabelecimento(id);
 

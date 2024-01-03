@@ -12,7 +12,84 @@ body {
 	background: #FFF5E0;
 }
 
+@media (max-width:767px) {
+	body {
+		overflow-x: hidden;
+	}
 
+
+	#logo {
+		text-align: center;
+	}
+	
+	#caixa select{
+		width: 70% !important;
+	}
+
+	.navigation {
+		flex-direction: column;
+		gap: 1rem;
+		align-items: unset !important;
+	}
+
+	.filtros ul {
+		justify-content: unset !important;
+	}
+
+
+	.conteudo {
+		margin-top: 30% !important;
+	}
+
+	.caixaPesquisa input {
+		width: 350px !important;
+	}
+
+	#services {
+		width: 90% !important;
+		bottom: 20px !important;
+		position: relative;
+		
+	}
+
+	.caixaResult {
+		flex-direction: column;
+		margin-top: 1rem !important;
+		margin-bottom: 1rem !important;
+		text-align: center;
+	}
+
+	.txtResult {
+		width: 100% !important;
+	}
+
+	.listaProdutos {
+		width: 355px !important;
+	}
+
+	.links {
+		justify-content: center;
+		display: flex;
+	}
+
+	.links ul {
+		justify-content: space-around;
+		padding: 0;
+	}
+}
+
+@media (max-width:375px) {
+	.filtros ul {
+		margin-right: 30px;
+		gap: 0 !important;
+		text-align: center;
+	}
+
+	.conteudo {
+		margin-top: 5% !important;
+	}
+
+}
 
 /* Navbar  */
 
@@ -127,6 +204,7 @@ body {
 	flex-direction: column;
 	background: #fff;
 	box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+	margin-bottom: 20px;
 }
 
 .caixaResult {
@@ -257,4 +335,30 @@ input[type="search"]::-webkit-search-clear-button {
 .checkbox-wrapper-1 [type=checkbox].substituted.dark:checked:enabled+label:active:before {
 	background-color: #c68035;
 	color: rgba(0, 0, 0, 0.275);
+}
+
+
+
+#caixa {
+	width: 500px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 120px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+}
+
+#caixa select {
+	width: 100%;
+}
+
+.box {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	gap: 0.3rem;
 }

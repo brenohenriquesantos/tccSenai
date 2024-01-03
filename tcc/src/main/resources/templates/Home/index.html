@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	<meta name="description" content="" />
 	<meta name="author" content="" />
 	<title>ODIN</title>
@@ -40,7 +40,7 @@
 
 		<div class="caixaPesquisa">
 			<div class="pesquisa">
-				<input type="search" id="inputPesquisa" placeholder="Oque você busca ?" >
+				<input type="search" id="inputPesquisa" placeholder="Oque você busca ?">
 			</div>
 
 			<div class="listaProdutos">
@@ -51,8 +51,8 @@
 
 		</div>
 
-		
-	<div class="links">
+
+		<div class="links">
 			<ul>
 				<li><a href="/estabelecimento/cadastrar">Indicar um Local</a></li>
 				<li><a href="/estabelecimentos/todos">Estabelecimentos</a></li>
@@ -62,66 +62,26 @@
 		</div>
 	</div>
 
-	<div id="titulo">
-		<h2>Locais Mais Acessados</h2>
+	<div id="paiFiltros">
+		<div id="filtros">
+			<ul>
+				<li><button type="button" class="filtro-btn" data-tipo="1"><span> <i
+								class="fa-solid fa-utensils"></i> Restaurantes</span></button></li>
+				<li><button type="button" class="filtro-btn" data-tipo="2"><span><i
+								class="fa-solid fa-martini-glass-citrus"></i> Bares</span></button></li>
+				<li><button type="button" class="filtro-btn" data-tipo="3"><span><i
+								class="fa-solid fa-bag-shopping"></i> Shoppings</span></button></li>
+				<li><button type="button" class="filtro-btn" data-tipo="4"><span><i class="fa-solid fa-hotel"></i>
+							Hotéis</span></button></li>
+				<li><button type="button" class="filtro-btn" data-tipo="5"><span> <i class="fa-solid fa-store"></i>
+							Lojas </span></button></li>
+			</ul>
+		</div>
 	</div>
 
 	<!-- Services section-->
 	<section id="services">
-		<div class="container px-4" id="estabelecimentoContainer">
-			<div class="row gx-4 justify-content-center">
-				<!-- Imagem do lado esquerdo -->
-				<div class="col-lg-4">
-					<a href="" class="linkID"><img src="images/bar.jpg" alt="Imagem" class="img-fluid"></a>
-				</div>
-				<!-- Texto descritivo do lado direito -->
-				<div class="col-lg-6" id="sobre">
-					<h2>Bar do juca</h2>
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut optio velit inventore, expedita quo
-						laboriosam possimus ea consequatur vitae, doloribus consequuntur ex. Nemo assumenda laborum vel,
-						labore ut velit dignissimos Lorem ipsum, dolor sit amet consectetur adipisicing elit. Excepturi
-						cum ipsum doloribus a consequuntur veritatis totam illo, repellat placeat quaerat est cumque
-						reprehenderit non laboriosam veniam qui sapiente quisquam sequi.</p>
-				</div>
-			</div>
-		</div>
-
-		<div class="container px-4">
-			<div class="row gx-4 justify-content-center">
-				<!-- Imagem do lado esquerdo -->
-				<div class="col-lg-4">
-					<a href="" class="linkID"><img src="images/bar.jpg" alt="Imagem" class="img-fluid"></a>
-				</div>
-				<!-- Texto descritivo do lado direito -->
-				<div class="col-lg-6" id="sobre">
-					<h2>Bar do juca</h2>
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut optio velit inventore, expedita quo
-						laboriosam possimus ea consequatur vitae, doloribus consequuntur ex. Nemo assumenda laborum vel,
-						labore ut velit dignissimos Lorem ipsum, dolor sit amet consectetur adipisicing elit. Excepturi
-						cum ipsum doloribus a consequuntur veritatis totam illo, repellat placeat quaerat est cumque
-						reprehenderit non laboriosam veniam qui sapiente quisquam sequi.</p>
-				</div>
-			</div>
-		</div>
-
-
-		<div class="container px-4">
-			<div class="row gx-4 justify-content-center">
-				<!-- Imagem do lado esquerdo -->
-				<div class="col-lg-4">
-					<a href="" class="linkID"><img src="images/bar.jpg" alt="Imagem" class="img-fluid"></a>
-				</div>
-				<!-- Texto descritivo do lado direito -->
-				<div class="col-lg-6" id="sobre">
-					<h2>Bar do juca</h2>
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut optio velit inventore, expedita quo
-						laboriosam possimus ea consequatur vitae, doloribus consequuntur ex. Nemo assumenda laborum vel,
-						labore ut velit dignissimos Lorem ipsum, dolor sit amet consectetur adipisicing elit. Excepturi
-						cum ipsum doloribus a consequuntur veritatis totam illo, repellat placeat quaerat est cumque
-						reprehenderit non laboriosam veniam qui sapiente quisquam sequi.</p>
-				</div>
-			</div>
-		</div>
+		
 	</section>
 	<!-- Footer-->
 	<footer class="py-5 bg-dark">

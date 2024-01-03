@@ -30,8 +30,6 @@ public class Estabelecimento {
 	private Long id;
 	@Column(nullable = false)
 	private String nome;
-	@Column(nullable = false, unique = true)
-	private String cnpj;
 	@Transient
 	private String fotoBase64;
 	@JsonIgnore
@@ -56,6 +54,9 @@ public class Estabelecimento {
 	private String telefone;
 	@Column(nullable = false ,length = 3)
 	private String ativo = "S";
+	@ManyToOne
+	@JoinColumn(name = "tipoId")
+	private EstabelecimentoTipo tipoEstab;
 	
 	public String getCep() {
 		return endereco.getCep();

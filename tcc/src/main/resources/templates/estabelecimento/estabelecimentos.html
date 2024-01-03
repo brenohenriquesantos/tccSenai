@@ -1,7 +1,7 @@
 <html>
 
 <head>
-
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
 		integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
 		crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -45,13 +45,13 @@
 
 		<div class="links">
 			<ul>
-				<li><a href="/cadastrar">Indicar um Local</a></li>
+				<li><a href="/estabelecimento/cadastrar">Indicar um Local</a></li>
 				<li><a href="#" id="login">Login</a></li>
 				<li><a href="#" id="perfil">Meu Perfil</a></li>
 			</ul>
 		</div>
-		
-		
+
+
 
 	</div>
 
@@ -61,6 +61,23 @@
 				<div class="pesquisa">
 					<input type="search" onkeyup="popularEstabsFiltrados()" id="inputPesquisa"
 						placeholder="Oque você busca ?">
+				</div>
+
+			</div>
+
+			<div id="caixa">
+				<div class="box">
+					<label>Selecione um estado</label>
+					<select id="estados" onchange="popularEstabsFiltrados()">
+						<option value=""></option>
+					</select>
+				</div>
+
+				<div class="box">
+					<label>Selecione uma cidade</label>
+					<select id="cidades" onchange="popularEstabsFiltrados()">
+						<option value=""></option>
+					</select>
 				</div>
 
 			</div>

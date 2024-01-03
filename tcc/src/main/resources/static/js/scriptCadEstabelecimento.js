@@ -1,4 +1,4 @@
-const cnpj = document.querySelector('#cnpj');
+
 const nome = document.querySelector('#nome');
 const btnProsseguir = document.querySelector('#btnProsseguir');
 const erroMsg = document.querySelector('#erroMsg');
@@ -26,43 +26,30 @@ const diasFuncionamento = document.querySelector('#diasFuncionamento');
 const horarioAbertura = document.querySelector('#horarioAbertura');
 const horarioFechamento = document.querySelector('#horarioFechamento');
 const telefone = document.querySelector('#telefone');
+const file_label = document.querySelector('#file-label');
+var uf = '';
+const tipoEstab = document.querySelector('#tipoEstab');
 
 
 
 
-function mascaraCNPJ() {
 
-	var cnpjLimpo = cnpj.value;
-
-	if (cnpjLimpo != null) {
-		// remover caracteres que não sejam numeros
-		cnpjLimpo = cnpjLimpo.replace(/\D/g, "");
-
-		//adiciona os pontos e etc.
-		cnpjLimpo = cnpjLimpo.replace(/(\d{2})(\d)/, "$1.$2");
-		cnpjLimpo = cnpjLimpo.replace(/(\d{3})(\d)/, "$1.$2");
-		cnpjLimpo = cnpjLimpo.replace(/(\d{3})(\d)/, "$1/$2");
-		cnpjLimpo = cnpjLimpo.replace(/(\d{4})(\d)/, "$1-$2");
-	}
-
-	cnpj.value = cnpjLimpo;
-}
 
 const handlePhone = (event) => {
-  let input = event.target
-  input.value = mascaraTelefone(input.value)
+	let input = event.target
+	input.value = mascaraTelefone(input.value)
 }
 
-function mascaraTelefone(valor){
-	if(!valor){
+function mascaraTelefone(valor) {
+	if (!valor) {
 		return "";
 	}
-	
-	valor = valor.replace(/\D/g,'')
-  	valor = valor.replace(/(\d{2})(\d)/,"($1) $2")
-  	valor = valor.replace(/(\d)(\d{4})$/,"$1-$2")
-  	
-  	return valor;
+
+	valor = valor.replace(/\D/g, '')
+	valor = valor.replace(/(\d{2})(\d)/, "($1) $2")
+	valor = valor.replace(/(\d)(\d{4})$/, "$1-$2")
+
+	return valor;
 }
 
 
@@ -77,7 +64,7 @@ function obterValorRadio(radio) {
 }
 
 function validarCampos() {
-	if (!nome.value.trim() || !cnpj.value.trim() || !descricao.value.trim() || !telefone.value.trim()) {
+	if (!nome.value.trim() || !descricao.value.trim() || !telefone.value.trim() || tipoEstab.value === '') {
 		erroMsg.textContent = "Preencha todos os campos !";
 		erroMsg.style = 'display: block';
 		return false;
@@ -128,7 +115,7 @@ function validarImagem(dadoImagem) {
 	return true;
 }
 
-cnpj.addEventListener('keyup', mascaraCNPJ);
+
 
 
 function mostrarImgEscolhida(fileInput) {
@@ -181,36 +168,7 @@ function validarCamposForm4() {
 	return true;
 }
 
-async function verificarCnpj(cnpj) {
 
-		if(cnpj.trim()){
-			const resposta = await fetch('/verificarCnpj', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(cnpj)
-		})
-
-		let erroAtivo = false;
-
-		if (resposta.ok && erroAtivo == false) {
-			let textoErro = await resposta.text();
-			erroMsg.textContent = textoErro;
-			erroMsg.style = 'display: block';
-			erroAtivo = true;
-			return false;
-		} else {
-			erroMsg.style = 'display: none';
-			return true;
-		}
-
-		}
-		
-
-
-
-}
 
 
 
@@ -218,7 +176,7 @@ async function verificarCnpj(cnpj) {
 async function buscarEndereco(cep) {
 	cep = limparCep(cep);
 
-	var resposta = await fetch('https://viacep.com.br/ws/' + cep + '/json/');
+	var resposta = await fetch('/buscarEndereco?cep=' + cep);
 
 	if (resposta.ok) {
 		const dados = await resposta.json();
@@ -226,8 +184,11 @@ async function buscarEndereco(cep) {
 		localidade.value = dados.localidade;
 		bairro.value = dados.bairro;
 		logradouro.value = dados.logradouro;
+		uf = dados.uf;
 	}
 }
+
+
 
 cep.addEventListener('blur', () => {
 	const cepValor = cep.value;
@@ -294,21 +255,58 @@ async function processarImagem() {
 	}
 }
 
-cnpj.addEventListener('blur', async () => {
-	verificarCnpj(cnpj.value);
-})
+
+async function obterTiposEstabs() {
+	try {
+		const response = await fetch('/tipos/estabs');
+
+		if (!response.ok) {
+			console.log('Erro ao obter tipos de estabelecimentos.');
+		}
+
+		const dados = await response.json();
+
+		return dados;
+	} catch (error) {
+		const erroMsg = await error.text();
+
+		console.log(erroMsg);
+	}
+}
+
+
+async function popularListaTipoEstabs() {
+	const dados = await obterTiposEstabs();
+
+	for (const dado of dados) {
+		const option = document.createElement('option');
+
+		option.text = dado.descricao;
+		option.value = dado.id;
+
+		tipoEstab.appendChild(option);
+	}
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+	await popularListaTipoEstabs();
+});
+
+
+
+
 
 btnProsseguir.addEventListener('click', async () => {
 	if (validarCampos()) {
 
 		imagemData = await processarImagem();
 
-		if (verificarCnpj(cnpj.value)) {
-			if (validarImagem(imagemData)) {
-				form.style = 'display:none';
-				terceiro_form.style = 'display:flex';
-			}
+
+		if (validarImagem(imagemData)) {
+			form.style = 'display:none';
+			terceiro_form.style = 'display:flex';
 		}
+
 	}
 })
 
@@ -317,6 +315,9 @@ btnProsseguir2.addEventListener('click', () => {
 	if (validarCamposForm3()) {
 		terceiro_form.style = 'display:none'
 		sub_form.style = 'display:flex'
+		const form = document.querySelector('.login-page');
+
+		form.style.setProperty('height', 'auto', 'important');
 	}
 })
 
@@ -329,6 +330,8 @@ btnProsseguir3.addEventListener('click', () => {
 
 
 
+
+
 btnEnviar.addEventListener('click', async () => {
 	if (validarCamposForm4()) {
 		try {
@@ -336,12 +339,12 @@ btnEnviar.addEventListener('click', async () => {
 
 			const estabelecimentoDados = {
 				nome: nome.value,
-				cnpj: cnpj.value,
 				endereco: {
 					logradouro: logradouro.value,
 					cep: cep.value,
 					bairro: bairro.value,
-					localidade: localidade.value
+					localidade: localidade.value,
+					uf: uf
 				},
 				fotoBase64: imagemData,
 				descricao: descricao.value,
@@ -353,7 +356,10 @@ btnEnviar.addEventListener('click', async () => {
 					horarioAbertura: horarioAbertura.value,
 					horarioFechamento: horarioFechamento.value
 				},
-				telefone: telefone.value
+				telefone: telefone.value,
+				tipoEstab:{
+					id: tipoEstab.value
+				}
 			};
 
 			const resposta = await fetch('/estabelecimento/cadastrar', {

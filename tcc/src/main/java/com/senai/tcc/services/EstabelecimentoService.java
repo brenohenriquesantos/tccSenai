@@ -2,16 +2,12 @@ package com.senai.tcc.services;
 
 import java.util.List;
 
-import javax.swing.JOptionPane;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.senai.tcc.components.Base64ToByte;
 import com.senai.tcc.components.ByteToBase64;
 import com.senai.tcc.components.EstabFiltros;
-import com.senai.tcc.components.RespostaConsultaEstab;
 import com.senai.tcc.entities.EstHorarioFuncionamento;
 import com.senai.tcc.entities.Estabelecimento;
 import com.senai.tcc.exceptions.InvalidCnpjException;
@@ -33,8 +29,6 @@ public class EstabelecimentoService {
 
 		validarEstabelecimento(estabelecimento);
 
-		estabelecimento.setCnpj(LimparCNPJ.limpar(estabelecimento.getCnpj()));
-
 		estabelecimento.setImgEstabelecimento(convertBase64ToByte(estabelecimento));
 
 		limparCep(estabelecimento);
@@ -51,9 +45,19 @@ public class EstabelecimentoService {
 	private void limparTelefone(Estabelecimento est) {
 		est.setTelefone(LimparTelefone.limpar(est.getTelefone()));
 	}
-
+	
 	public List<Estabelecimento> obterAcessados() throws Exception {
-		List<Estabelecimento> estabelecimentos = estRepository.findMostAcess();
+		List<Estabelecimento> estabelecimentos = estRepository.obterAcessados();
+
+		validarEstabMaisAcessados(estabelecimentos);
+
+		estabelecimentos = conveterImgsToBase64(estabelecimentos);
+
+		return estabelecimentos;
+	}
+
+	public List<Estabelecimento> obterAcessadosFiltrados(Long idTipo) throws Exception {
+		List<Estabelecimento> estabelecimentos = estRepository.obterAcessadosFiltrados(idTipo);
 
 		validarEstabMaisAcessados(estabelecimentos);
 
@@ -101,8 +105,7 @@ public class EstabelecimentoService {
 		return imgByte;
 	}
 
-	private void validarEstabelecimento(Estabelecimento estabelecimento)
-			throws IllegalArgumentException, InvalidCnpjException {
+	private void validarEstabelecimento(Estabelecimento estabelecimento) throws IllegalArgumentException {
 
 		if (StringUtils.isBlank(estabelecimento.getNome())) {
 			throw new IllegalArgumentException("Campo nome não pode ser vazio");
@@ -111,8 +114,6 @@ public class EstabelecimentoService {
 		if (StringUtils.isBlank(estabelecimento.getFotoBase64())) {
 			throw new IllegalArgumentException("Campo imagem não pode ser vazio");
 		}
-
-		Utilitarios.validarCNPJ(estabelecimento.getCnpj());
 
 		validarHorario(estabelecimento.getEstHorario());
 
@@ -148,42 +149,43 @@ public class EstabelecimentoService {
 	public List<Estabelecimento> obterEstabsPeloNome(String nome) throws NotFoundEstabelecimentos {
 
 		List<Estabelecimento> estabs = estRepository.obterEstabsPeloNome(nome);
-		
+
 		validarEstabelecimentos(estabs);
-		
+
 		estabs = conveterImgsToBase64(estabs);
 
 		return estabs;
 	}
-	
+
 	private void validarEstabelecimentos(List<Estabelecimento> estabs) throws NotFoundEstabelecimentos {
-		if(estabs.isEmpty()) {
+		if (estabs.isEmpty()) {
 			throw new NotFoundEstabelecimentos("Estabelecimento não encontrado !");
 		}
 	}
-	
-	
+
 	public List<Estabelecimento> obterEstabs() throws NotFoundEstabelecimentos {
 
 		List<Estabelecimento> estabs = estRepository.findAll();
-		
+
 		validarEstabelecimentos(estabs);
-		
+
 		estabs = conveterImgsToBase64(estabs);
 
 		return estabs;
 	}
-	
-	public List<Estabelecimento> obterEstabsFiltrado(EstabFiltros filtros) throws NotFoundEstabelecimentos{
-		List<Estabelecimento> estabs = estRepository.obterEstabsFiltrados(filtros.nome,
-				filtros.banheiro, filtros.rampa, filtros.estacionamento);
-		
+
+
+
+	public List<Estabelecimento> obterEstabsFiltrado(EstabFiltros filtros) throws NotFoundEstabelecimentos {
+
+		List<Estabelecimento> estabs = estRepository.obterEstabsFiltrados(filtros.nome, filtros.banheiro, filtros.rampa,
+				filtros.estacionamento, filtros.uf, filtros.localidade);
+
 		validarEstabelecimentos(estabs);
-		
+
 		estabs = conveterImgsToBase64(estabs);
-		
+
 		return estabs;
 	}
-	
 
 }

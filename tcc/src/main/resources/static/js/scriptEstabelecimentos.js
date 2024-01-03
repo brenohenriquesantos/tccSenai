@@ -6,6 +6,9 @@ const checkEstacionamento = document.querySelector('#estacionamento');
 const checkBanheiro = document.querySelector('#banheiro');
 const linkPerfil = document.querySelector('#perfil');
 
+const estadosSelect = document.querySelector('#estados');
+const cidadesSelect = document.querySelector('#cidades');
+
 
 function verificarCookie(nomeCookie) {
 	var cookieValor = document.cookie.split(';').find(row => row.trim().startsWith(nomeCookie + '='));
@@ -30,9 +33,9 @@ function deleteCookie(nomeCookie) {
 
 function obterIdLogado() {
 	const cookie = document.cookie.split(';').find(row => row.trim().startsWith(nomeCookie + '='));
-	
+
 	const id = cookie ? parseInt(cookie.split('=')[1]) : null;
-	
+
 	return id;
 }
 
@@ -42,7 +45,7 @@ function verificarLogado() {
 		linkLogin.textContent = 'Deslogar'
 		linkPerfil.style = 'display:block'
 		linkPerfil.href = '/usuario/perfil/?id=' + obterIdLogado();
-		
+
 	} else {
 		linkPerfil.style = 'display:none'
 		linkLogin.textContent = 'Login'
@@ -64,6 +67,7 @@ async function popularEstabsFiltrados() {
 
 	let banheiro, rampa, estacionamento;
 
+
 	if (checkBanheiro.checked) {
 		banheiro = 'S'
 	}
@@ -76,11 +80,15 @@ async function popularEstabsFiltrados() {
 		estacionamento = 'S'
 	}
 
+
+
 	const filtros = {
 		nome: document.querySelector('#inputPesquisa').value,
 		banheiro: banheiro,
 		rampa: rampa,
-		estacionamento: estacionamento
+		estacionamento: estacionamento,
+		uf: document.querySelector('#estados').value,
+		localidade: document.querySelector('#cidades').value
 	}
 
 
@@ -94,7 +102,7 @@ async function popularEstabsFiltrados() {
 	)
 
 	const services = document.querySelector('#services');
-	
+
 	services.innerHTML = '';
 
 	if (res.ok) {
@@ -120,6 +128,9 @@ async function popularEstabsFiltrados() {
 		})
 	} else {
 		services.innerHTML = '';
+		
+		const erro = await res.text();
+		console.log(erro);
 	}
 }
 
@@ -176,9 +187,66 @@ function filtrar() {
 
 }
 
+async function obterEstados() {
+	const response = await fetch('https://servicodados.ibge.gov.br/api/v1/localidades/estados');
+
+	if (!response.ok) {
+		alert('Erro ao obter estados !');
+	}
+
+	const dados = await response.json();
+
+
+	for (const estado of dados) {
+		const option = document.createElement('option');
+
+		option.value = estado.sigla;
+		option.text = estado.nome;
+
+		estadosSelect.appendChild(option);
+	}
+}
+
+async function obterCidadesPeloUf(siglaEstado) {
+	const response = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${siglaEstado}/municipios`);
+
+	if (!response.ok) {
+		alert('Erro ao obter cidades');
+	}
+
+	const cidades = await response.json();
+
+
+
+	for (const cidade of cidades) {
+		const option = document.createElement('option');
+
+		option.value = cidade.nome;
+		option.text = cidade.nome;
+
+		cidadesSelect.appendChild(option);
+
+	}
+
+
+}
+
+
+estadosSelect.addEventListener('change', () => {
+
+	cidadesSelect.innerHTML = '';
+
+	const siglaEstado = estadosSelect.value;
+
+	obterCidadesPeloUf(siglaEstado);
+
+
+})
+
 
 document.addEventListener('DOMContentLoaded', () => {
 	popularEstabsFiltrados();
 	verificarLogado();
+	obterEstados();
 })
 
