@@ -4,17 +4,14 @@ FROM openjdk:17-jdk AS build
 # Definir o diretório de trabalho no contêiner
 WORKDIR /app
 
-# Copiar apenas o arquivo pom.xml para aproveitar o cache de dependências
-COPY pom.xml .
-
-# Baixar as dependências do Maven (se houver alterações no pom.xml)
-RUN ["./mvnw", "dependency:go-offline"]
-
-# Copiar o restante dos arquivos do projeto
+# Copiar todos os arquivos para aproveitar o cache de dependências do Maven
 COPY . .
 
+# Baixar as dependências do Maven (se houver alterações no pom.xml)
+RUN ./mvnw dependency:go-offline
+
 # Construir o projeto com o Maven
-RUN ["./mvnw", "clean", "install"]
+RUN ./mvnw clean install
 
 # Fase de execução
 FROM openjdk:17-jdk-slim
