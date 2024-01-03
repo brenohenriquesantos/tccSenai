@@ -7,13 +7,6 @@ RUN apt-get update && apt-get install -y maven
 # Crie o diretório de trabalho no contêiner
 WORKDIR /app
 
-# Copie apenas o arquivo pom.xml para o contêiner
-COPY pom.xml .
-
-# Baixe as dependências do Maven (isso é feito antes de copiar o código-fonte
-# para aproveitar o cache de dependências se o arquivo pom.xml não mudou)
-RUN mvn dependency:go-offline
-
 # Copie todo o código-fonte para o contêiner
 COPY . .
 
