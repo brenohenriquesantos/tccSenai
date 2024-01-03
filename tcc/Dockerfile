@@ -5,6 +5,9 @@ WORKDIR /app
 # Copie o arquivo pom.xml para o diretório atual
 COPY pom.xml .
 
+# Crie a estrutura de diretórios para copiar os arquivos de origem
+RUN mkdir src
+
 # Copie o restante do código-fonte
 COPY src ./src
 
