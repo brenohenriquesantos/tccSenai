@@ -1,9 +1,6 @@
 # Use a imagem oficial do OpenJDK para a fase de construção
 FROM openjdk:17-jdk AS build
 
-# Atualize o sistema e instale o Maven
-RUN apt-get update && apt-get install -y maven
-
 # Crie o diretório de trabalho no contêiner
 WORKDIR /app
 
@@ -11,7 +8,7 @@ WORKDIR /app
 COPY . .
 
 # Construa o projeto com o Maven
-RUN mvn clean install
+RUN ./mvnw clean install
 
 # Imagem final para a execução
 FROM openjdk:17-jdk-slim
